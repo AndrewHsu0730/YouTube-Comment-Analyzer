@@ -9,6 +9,7 @@ from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import nltk
 end = t()
 print("Package importing:", end - start)
 
@@ -19,6 +20,8 @@ start = t()
 my_api_key = API_KEY()
 youtube = build("youtube", "v3", developerKey = my_api_key)
 translator = Translator()
+nltk.download("stopwords")
+nltk.download("vader_lexicon")
 end = t()
 print("Initialization:", end - start)
 
