@@ -1,4 +1,6 @@
 # Package importing
+from time import time as t
+start = t()
 import pandas as pd
 from api_key import API_KEY
 from googleapiclient.discovery import build
@@ -7,13 +9,23 @@ from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+end = t()
+print("Package importing:", end - start)
+
+
+
+# Initialization
+start = t()
+my_api_key = API_KEY()
+youtube = build("youtube", "v3", developerKey = my_api_key)
+translator = Translator()
+end = t()
+print("Initialization:", end - start)
 
 
 
 # Comment extraction
-my_api_key = API_KEY()
-
-youtube = build("youtube", "v3", developerKey = my_api_key)
+start = t()
 
 original_comments = []
 
@@ -54,19 +66,30 @@ comment_list = extract_comment(input("Enter the url of video: "), input("Enter t
 
 df = pd.DataFrame(comment_list, columns = ["Comments"])
 
+end = t()
+
+print("Comment extraction:", end - start)
+
 
 
 # Comment translating
+start = t()
+
 def translate_comment(comment):
-    translator = Translator()
     comment_in_english = translator.translate(comment).text
     return comment_in_english
 
 df["Comments"] = df["Comments"].apply(translate_comment)
 
+end = t()
+
+print("Comment translating:", end - start)
+
 
 
 # Comment processing
+start = t()
+
 url_pattern = r"https?://(www\.)?[-a-zA-Z0-9@:%._\\+~#?&/=]+\.[a-z]{2,6}[-a-zA-Z0-9()@:%._\\+~#?&/=]*"
 
 df["Comments"] = (
@@ -90,9 +113,15 @@ df["Comments"] = df["Comments"].apply(
 df["Comments"] = df[df["Comments"] != ""]
 df = df.dropna()
 
+end = t()
+
+print("Comment processing:", end - start)
+
 
 
 # Word cloud
+start = t()
+
 word_cloud = WordCloud(collocations = False, max_words = 30, background_color = "white")
 
 word_cloud.generate(" ".join(df["Comments"]))
@@ -101,9 +130,15 @@ plt.imshow(word_cloud, interpolation = "bilinear")
 plt.axis("off")
 plt.show()
 
+end = t()
+
+print("Word cloud:", end - start)
+
 
 
 # Sentiment analysis
+start = t()
+
 analyzer = SentimentIntensityAnalyzer()
 
 df["Sentiment scores"] = df["Comments"].apply(lambda comment: analyzer.polarity_scores(comment))
@@ -128,3 +163,7 @@ sentiment_count_df = df["Sentiments"].value_counts().sort_index(ascending = Fals
 plt.bar(sentiment_count_df.index, sentiment_count_df.values, 0.4)
 plt.title("Number of Comments by Sentiment")
 plt.show()
+
+end = t()
+
+print("Sentiment analysis:", end - start)
