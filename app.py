@@ -6,8 +6,8 @@ from analyzer import extract_comment, translate_comment, process_comment, genera
 app = Flask(__name__)
 
 @app.route("/")
-def homepage():
-    return render_template("homepage.html")
+def home():
+    return render_template("home.html")
 
 @app.route("/", methods = ["POST"])
 def read_url():
@@ -25,6 +25,10 @@ def read_url():
     bar_chart = generate_bar_chart(sentiment_count_df) # Generate bar chart
     bar_chart.savefig(os.path.join("static", "images", "bar_chart.png")) # Save the bar chart
     return render_template("dashboard.html")
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
 
 if __name__ == "__main__":
     app.run(debug = True, host = "localhost", port = 8008)
