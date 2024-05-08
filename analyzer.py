@@ -7,7 +7,8 @@ from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import nltk
+from PIL import Image
+import numpy as np
 
 
 
