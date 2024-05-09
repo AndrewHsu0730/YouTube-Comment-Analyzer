@@ -1,0 +1,19 @@
+body{
+    max-width: 849px;
+    margin: auto;
+    background-color: white;
+}
+
+ul {
+    display: flex;
+    list-style-type: none;
+    flex-direction: row;
+}
+
+li {
+    margin-right: 10px;
+}
+
+li:last-of-type{
+    margin-left: 200px;
+}
