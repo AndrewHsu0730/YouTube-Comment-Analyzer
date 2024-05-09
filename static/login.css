@@ -48,3 +48,10 @@ h1 {
     color: rgb(255, 0, 0);
     text-align: center;
 }
+
+.login-box {
+    border-style: solid;
+    border-color: rgb(255, 69, 69);
+    border-radius: 20px;
+    padding: 2rem;
+}
