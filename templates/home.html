@@ -8,19 +8,17 @@
 </head>
 <body>
     <div class="dropdown">
-        <div class="topnav">
-            <nav>
-                <ul>
-                    <li><a class="active" href="#home">Home</a></li>
-                    <li><a class = "FAQ" href = "{{ url_for('faq') }}">FAQ</a></li>
-                    <li><a href="{{ url_for('about') }}">About Us</a></li>
-                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
-                    <li><a href="{{ url_for('privacy')}}">Privacy Policy</a></li>
-                    <li><a href="{{ url_for('terms') }}">Terms of Use</a></li>
-                    <li><a href = "{{ url_for('login') }}">login/sign up</a></li>
-                </ul>
-            </nav>
-        </div>
+        <nav>
+            <ul>
+                <li><a class="active" href="#home">Home</a></li>
+                <li><a class = "FAQ" href = "{{ url_for('faq') }}">FAQ</a></li>
+                <li><a href="{{ url_for('about') }}">About Us</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                <li><a href="{{ url_for('privacy')}}">Privacy Policy</a></li>
+                <li><a href="{{ url_for('terms') }}">Terms of Use</a></li>
+                <li><a href = "{{ url_for('login') }}">login/sign up</a></li>
+            </ul>
+        </nav>
     </div>
     <h1>YouTube Comment Analyzer</h1>
     <img src="static/images/InsightForge.png" alt="Insight Forge logo for YouTube Comment Analyzer">
@@ -42,5 +40,17 @@
     <p2>
         As of now, this application can only function with YouTube but changes are being made to make it compatible with other websites
     </p2>
+    <section id="grid">
+        <h2>Instructions: How to Generate Stats with Youtube URL</h2>
+        <p1>
+            Step 1: Copy and paste the Youtube URL into the box. 
+        </p1>
+        <p2>
+            Step 2: Click the 'Generate Stats' button. 
+        </p2>
+        <p3>
+            Step 3: View the generated dashboard with your stats!
+        </p3>
+        </section> 
 </body>
 </html>
