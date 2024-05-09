@@ -51,9 +51,5 @@ def read_url():
     pie_chart.savefig(os.path.join("static", "images", "pie_chart.png")) # Save the pie chart
     return render_template("dashboard.html")
 
-@app.route("/login")
-def login():
-    return render_template("login.html")
-
 if __name__ == "__main__":
     app.run(debug = True, host = "localhost", port = 8008)
