@@ -1,8 +1,4 @@
 # Package importing
-<<<<<<< HEAD
-=======
-import pandas 
->>>>>>> b3b18e8ff4f311a1ffd27055eae5e37792d30aad
 from api_key import API_KEY
 from googleapiclient.discovery import build
 from googletrans import Translator
@@ -10,11 +6,8 @@ from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-<<<<<<< HEAD
 from PIL import Image
 import numpy as np
-=======
->>>>>>> b3b18e8ff4f311a1ffd27055eae5e37792d30aad
 
 my_api_key = API_KEY()
 youtube = build("youtube", "v3", developerKey=my_api_key)
