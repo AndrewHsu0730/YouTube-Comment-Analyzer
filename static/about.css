@@ -6,14 +6,45 @@ body{
 
 ul {
     display: flex;
-    list-style-type: none;
     flex-direction: row;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+
 }
 
-li {
-    margin-right: 10px;
+a:link { 
+    text-decoration: none; 
+    color: antiquewhite;
+  } 
+
+a:visited { 
+    text-decoration: none;
+    color: antiquewhite;
+  } 
+
+li a:hover { 
+    text-decoration: none;
+  }  
+
+li a{
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+li:last-of-type {
+    margin-left: 179px;
 }
 
-li:last-of-type{
-    margin-left: 200px;
+li a:hover {
+    background-color: rgb(255, 69, 69);
+}
+
+h1 {
+    color: rgb(255, 0, 0);
+    text-align: center;
 }
