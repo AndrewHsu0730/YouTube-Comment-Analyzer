@@ -15,7 +15,6 @@ my_api_key = API_KEY()
 youtube = build("youtube", "v3", developerKey=my_api_key)
 translator = Translator()
 mask = np.array(Image.open("youtube_icon.png"))
-print(mask)
 stop_words = stopwords.words("english")
 
 
@@ -111,9 +110,6 @@ def generate_word_cloud(comments):
     plt.title("WordCloud")
     return plt
 
-# Sentiment analysis
-
-
 def calculate_score(df, comment_col):
     analyzer = SentimentIntensityAnalyzer()
 
@@ -125,7 +121,6 @@ def calculate_score(df, comment_col):
 
     return df
 
-
 def identify_sentiment(compound_score):
     if compound_score >= 0.2:
         return "positive"
@@ -133,7 +128,6 @@ def identify_sentiment(compound_score):
         return "negative"
     else:
         return "neutral"
-
 
 def generate_pie_chart(df):
     plt.clf()
