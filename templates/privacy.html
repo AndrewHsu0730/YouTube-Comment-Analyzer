@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href = "{{ url_for('static', filename='login.css') }}">
+    <title>Privacy</title>
+    <link rel="stylesheet" href = "{{ url_for('static', filename='privacy.css') }}">
 </head>
 <body>
-    <div class="dropdown">
+   <div class="dropdown">
         <div class="topnav">
             <nav>
                 <ul>
@@ -15,20 +15,13 @@
                     <li><a class = "FAQ" href = "{{ url_for('faq') }}">FAQ</a></li>
                     <li><a href="{{ url_for('about') }}">About Us</a></li>
                     <li><a href="{{ url_for('contact') }}">Contact</a></li>
-                    <li><a href="{{ url_for('privacy')}}">Privacy Policy</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
                     <li><a href="{{ url_for('terms') }}">Terms of Use</a></li>
-                    <li><a href = "#login">login/sign up</a></li>
+                    <li><a href = "{{ url_for('login') }}">login/sign up</a></li>
                 </ul>
             </nav>
         </div>
     </div>
-    <h1>Login</h1>
-    <form>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br><br>
-        <label for="password">Password:</label>
-        <input type="text" id="password" name="password"><br><br>
-        <button type="submit">Login</button>
-    </form>
+    <h1>Privacy Use</h1>
 </body>
 </html>

@@ -12,13 +12,12 @@
             <nav>
                 <ul>
                     <li><a class="active" href="#home">Home</a></li>
-                    <li>Instructions</li>
-                    <li><a class = "FAQ" href = "#FAQ">FAQ</a></li>
-                    <li><a href="#about">About Us</a></li>
-                    <li>Contact</li>
-                    <li>Privacy Policy </li>
-                    <li>Terms of Use</li>
-                    <li>login/sign up</li>
+                    <li><a class = "FAQ" href = "{{ url_for('faq') }}">FAQ</a></li>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                    <li><a href="{{ url_for('privacy')}}">Privacy Policy</a></li>
+                    <li><a href="{{ url_for('terms') }}">Terms of Use</a></li>
+                    <li><a href = "{{ url_for('login') }}">login/sign up</a></li>
                 </ul>
             </nav>
         </div>

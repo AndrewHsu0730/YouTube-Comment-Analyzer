@@ -1,5 +1,5 @@
 # Package importing
-import pandas as pd
+import pandas 
 from api_key import API_KEY
 from googleapiclient.discovery import build
 from googletrans import Translator
@@ -7,7 +7,6 @@ from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import nltk
 
 
 
