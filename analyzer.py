@@ -14,7 +14,6 @@ my_api_key = API_KEY()
 youtube = build("youtube", "v3", developerKey=my_api_key)
 translator = Translator()
 mask = np.array(Image.open("youtube_icon.png"))
-print(mask)
 stop_words = stopwords.words("english")
 
 
@@ -22,7 +21,6 @@ stop_words = stopwords.words("english")
 def extract_data(url, pages):
     original_comments = []
     
-
     if int(pages) > 2500:
         raise Exception(
             "The number of pages to extract can't exceed 2500 due to quota limit.")
@@ -32,12 +30,12 @@ def extract_data(url, pages):
     else:
         video_id = url[(url.index("v=") + 2):]
         
-    request = requests.get(f"https://returnyoutubedislikeapi.com/votes?videoId={video_id}")  
+    request = requests.get(f"https://returnyoutubedislikeapi.com/votes?videoId={video_id}").json()
+    
     like_count = request["likes"]
     dislike_count = request["dislikes"]
     view_count = request["viewCount"]
     
-    print(like_count,dislike_count,view_count)
     n = 0
     while n < int(pages):
         try: 
@@ -64,7 +62,7 @@ def extract_data(url, pages):
                     item["snippet"]["topLevelComment"]["snippet"]["textOriginal"])
         n += 1
 
-    return original_comments,rate_response
+    return original_comments,like_count,dislike_count,view_count
 
 
 # Comment translating
