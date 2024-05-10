@@ -37,7 +37,7 @@ def terms():
 def read_url():
     url = request.form["url"]
     pages = request.form["pages"]
-    comment_list = extract_comment(url, pages) # Extract comments
+    comment_list,like_count,dislike_count,view_count = extract_comment(url, pages) # Extract comments
     df = pd.DataFrame(comment_list, columns = ["Comments"])
     if request.form.get('flag') == 1:
         df["Comments"] = df["Comments"].apply(translate_comment) # Translate comments
