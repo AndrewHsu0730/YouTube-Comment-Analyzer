@@ -8,17 +8,20 @@ import matplotlib.pyplot as plt
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from PIL import Image
 import numpy as np
+import requests
 
 my_api_key = API_KEY()
 youtube = build("youtube", "v3", developerKey=my_api_key)
 translator = Translator()
 mask = np.array(Image.open("youtube_icon.png"))
+print(mask)
 stop_words = stopwords.words("english")
 
 
 # Comment extraction
-def extract_comment(url, pages):
+def extract_data(url, pages):
     original_comments = []
+    
 
     if int(pages) > 2500:
         raise Exception(
@@ -28,28 +31,27 @@ def extract_comment(url, pages):
         video_id = url[(url.index("v=") + 2):url.index("&")]
     else:
         video_id = url[(url.index("v=") + 2):]
-
-    request = youtube.commentThreads().list(
-        part="snippet",
-        videoId=video_id,
-        maxResults=100
-    )
-
-    response = request.execute()
-
+        
+    request = requests.get(f"https://returnyoutubedislikeapi.com/votes?videoId={video_id}")  
+    like_count = request["likes"]
+    dislike_count = request["dislikes"]
+    view_count = request["viewCount"]
+    
+    print(like_count,dislike_count,view_count)
     n = 0
     while n < int(pages):
-        try:
-            request = youtube.commentThreads().list(
+        try: 
+            cm_request = youtube.commentThreads().list(
                 part="snippet",
                 videoId=video_id,
                 maxResults=100,
                 pageToken=response["nextPageToken"]
             )
-            response = request.execute()
-            for item in response["items"]:
+            
+            cm_response = cm_request.execute()
+            for item in cm_response["items"]:
                 original_comments.append(
-                    item["snippet"]["topLevelComment"]["snippet"]["textOriginal"])
+                    item["snippet"]["topLevelComment"]["snippet"]["textOriginal"])            
         except:
             request = youtube.commentThreads().list(
                 part="snippet",
@@ -62,7 +64,7 @@ def extract_comment(url, pages):
                     item["snippet"]["topLevelComment"]["snippet"]["textOriginal"])
         n += 1
 
-    return original_comments
+    return original_comments,rate_response
 
 
 # Comment translating
@@ -121,11 +123,11 @@ def calculate_score(df, comment_col):
 
 def identify_sentiment(compound_score):
     if compound_score >= 0.2:
-        return "positive"
+        return "Positive"
     elif compound_score <= -0.2:
-        return "negative"
+        return "Negative"
     else:
-        return "neutral"
+        return "Neutral"
 
 def generate_pie_chart(df):
     plt.clf()
