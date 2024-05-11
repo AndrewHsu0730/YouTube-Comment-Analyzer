@@ -1,8 +1,14 @@
 from flask import Flask, render_template, request
 import os
 from analyzer import *
+from pathlib import Path
+from database import db
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+app.instance_path = Path("./db").resolve()
+
+db.init_app(app)
 
 @app.route("/")
 def home():
