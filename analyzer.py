@@ -1,7 +1,7 @@
-# Package importing
+import matplotlib
+matplotlib.use('Agg')
 from api_key import API_KEY
 from googleapiclient.discovery import build
-from googletrans import Translator
 from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
@@ -9,126 +9,134 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from PIL import Image
 import numpy as np
 import requests
+import re
+
 
 my_api_key = API_KEY()
 youtube = build("youtube", "v3", developerKey=my_api_key)
-translator = Translator()
 mask = np.array(Image.open("youtube_icon.png"))
-stop_words = stopwords.words("english")
+stopwords = stopwords.words("english")
+analyzer = SentimentIntensityAnalyzer()
 
-
-# Comment extraction
-def extract_data(url, pages):
-    original_comments = []
-    
-    if int(pages) > 2500:
-        raise Exception(
-            "The number of pages to extract can't exceed 2500 due to quota limit.")
-
-    if "&" in url:
-        video_id = url[(url.index("v=") + 2):url.index("&")]
-    else:
-        video_id = url[(url.index("v=") + 2):]
-        
-    request = requests.get(f"https://returnyoutubedislikeapi.com/votes?videoId={video_id}").json()
+def getStat(vid):
+    request = requests.get(f"https://returnyoutubedislikeapi.com/votes?videoId={vid}").json()
     
     like_count = request["likes"]
     dislike_count = request["dislikes"]
     view_count = request["viewCount"]
     
+    return like_count,dislike_count,view_count
+
+def urlToVid(url):
+    if "&" in url:
+        vid = url[(url.index("v=") + 2):url.index("&")]
+    else:
+        vid = url[(url.index("v=") + 2):]
+    return vid
+
+
+def processComment(comment):
+    url_pattern = r"https?://(www\.)?[-a-zA-Z0-9@:%._\\+~#?&/=]+\.[a-z]{2,6}[-a-zA-Z0-9()@:%._\\+~#?&/=]*"
+    comment = re.sub(url_pattern, "", comment)
+    comment = re.sub(r"#\S+", "", comment)
+    comment = re.sub(r"[^\w\s']+", "", comment)
+    comment = re.sub(r"\d+", "", comment)
+    comment = comment.replace("_", " ")
+    comment = re.sub(r"\s+", " ", comment)
+    comment = comment.strip().lower()
+    
+    return comment
+
+
+    
+
+def getComment(vid, pages):
+    word_comments = {}
+    comments = []
+    if int(pages) > 2500:
+        raise Exception(
+            "The number of pages to extract can't exceed 2500 due to limit.")
     n = 0
+    
     while n < int(pages):
         try: 
-            cm_request = youtube.commentThreads().list(
+            response = youtube.commentThreads().list(
                 part="snippet",
-                videoId=video_id,
+                videoId=vid,
                 maxResults=100,
                 pageToken=response["nextPageToken"]
-            )
-            
-            cm_response = cm_request.execute()
-            for item in cm_response["items"]:
-                original_comments.append(
-                    item["snippet"]["topLevelComment"]["snippet"]["textOriginal"])            
-        except:
-            request = youtube.commentThreads().list(
-                part="snippet",
-                videoId=video_id,
-                maxResults=100,
-            )
-            response = request.execute()
+            ).execute()
+        
             for item in response["items"]:
-                original_comments.append(
-                    item["snippet"]["topLevelComment"]["snippet"]["textOriginal"])
+                sentence = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
+                sentence = processComment(sentence)
+                if sentence == "" or sentence == " ":
+                    pass
+                else:
+                    comments.append(sentence)
+                    for word in sentence.split():
+                        if word not in stopwords:
+                            word_comments[word] = word_comments.get(word,0) + 1
+        except:
+            response = youtube.commentThreads().list(
+                part="snippet",
+                videoId=vid,
+                maxResults=100,
+            ).execute()
+            for item in response["items"]:
+                sentence = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
+                sentence = processComment(sentence)
+                if sentence == "" or sentence == " ":
+                    pass
+                else:
+                    comments.append(sentence)
+                    for word in sentence.split():
+                        if word not in stopwords:
+                            word_comments[word] = word_comments.get(word,0) + 1
         n += 1
+    return word_comments,comments
 
-    return original_comments,like_count,dislike_count,view_count
-
-
-# Comment translating
-def translate_comment(comment):
-    if comment != "":
-        comment_in_english = translator.translate(comment).text
-        return comment_in_english
-
-# Comment processing
-
-
-def process_comment(df, comment_col):
-    url_pattern = r"https?://(www\.)?[-a-zA-Z0-9@:%._\\+~#?&/=]+\.[a-z]{2,6}[-a-zA-Z0-9()@:%._\\+~#?&/=]*"
-
-    df[comment_col] = (
-        df[comment_col]
-        .str.replace(url_pattern, "", regex=True)
-        .str.replace(r"#\S+", "", regex=True)
-        .str.replace(r"[^\w\s']+", "", regex=True)
-        .str.replace(r"\d+", "", regex=True)
-        .str.replace("_", " ")
-        .str.replace(r"\s+", " ", regex=True)
-        .str.strip()
-        .str.lower()
-    )
-
-    df[comment_col] = df[df[comment_col] != ""]
-    df = df.dropna()
-    return df
-
-
-# Word cloud
-def generate_word_cloud(comments):
+def generateWordCloud(comments):
+    plt.clf()
     word_cloud = WordCloud(scale = 3,
                        collocations = False,
                        background_color = "white",
                        mask = np.array(Image.open('youtube_icon.png')),
-                       stopwords = stop_words,
-                       colormap = "Reds_r").generate(" ".join(comments))
-    plt.figure(figsize=(10,8))
+                       colormap = "Reds_r").generate_from_frequencies(comments)
     plt.imshow(word_cloud)
     plt.axis('off')
-    plt.title("WordCloud")
+    plt.title("Common Words")
     return plt
 
-def calculate_score(df, comment_col):
-    analyzer = SentimentIntensityAnalyzer()
+def calculateScore(comments):
+    scores = list(map(analyzer.polarity_scores,comments))
+    print(scores)
+    sentiment = list(map(lambda score:identifySentiment(score["compound"]),scores))
+    sentimentDict = {"Postive":sentiment.count("Positive"),
+                     "Negative":sentiment.count("Negative"),
+                     "Neutral":sentiment.count("Neutral")}
+    print(sentimentDict)
+    return sentimentDict
 
-    df["Sentiment scores"] = df[comment_col].apply(
-        lambda comment: analyzer.polarity_scores(comment))
-
-    df["Compound Scores"] = df["Sentiment scores"].apply(
-        lambda sentiment_score: sentiment_score["compound"])
-
-    return df
-
-def identify_sentiment(compound_score):
-    if compound_score >= 0.2:
+def identifySentiment(score):
+    if score >= 0.2:
         return "Positive"
-    elif compound_score <= -0.2:
+    elif score <= -0.2:
         return "Negative"
     else:
         return "Neutral"
 
-def generate_pie_chart(df):
+def getPieChart(sentimentDict):
     plt.clf()
-    plt.pie(df.values, labels=df.index)
+    plt.pie(sentimentDict.values(), labels=sentimentDict.keys())
     plt.title("Number of Comments by Sentiment")
     return plt
+
+def getStats (date,likes,dislike,view):
+    fig,ax1 = plt.subplots()
+    ax1.bar(date,dislike,width = 0.4)
+    ax1.bar(date,likes,bottom = dislike, width = 0.4)
+    ax2 = ax1.twinx()
+    ax2.plot(date,view,color='y')
+    fig.tight_layout()
+    plt.show()
