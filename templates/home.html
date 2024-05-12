@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
-    <link rel="stylesheet" href = "{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href = "{{ url_for('static', filename='basic.css') }}">
+    <link rel="stylesheet" href = "{{ url_for('static', filename='home.css') }}">
+
 </head>
 <body>
     <div class="container">
@@ -15,15 +17,15 @@
           </div>
           <nav class="nav-menu">
             <a class = "nav-item" href = "{{ url_for("home") }}">Home</a>
-            <a class = "nav-item" href="{{ url_for("home") }}">Tutorial</a>
-            <a class = "nav-item" href="{{ url_for("home") }}">Dashboard</a>
-            <a class = "nav-item" href="{{ url_for("home")}}">About Us</a>
-            <a class = "nav-item" href="{{ url_for("home") }}">Terms of Use</a>
-            <a class = "login-button" href = "{{ url_for("home") }}">Login/Sign up</a>
+            <a class = "nav-item" href="{{ url_for("tutorial") }}">Tutorial</a>
+            <a class = "nav-item" href="{{ url_for("dashboard") }}">Dashboard</a>
+            <a class = "nav-item" href="{{ url_for("about")}}">About Us</a>
+            <a class = "nav-item" href="{{ url_for("terms") }}">Terms of Use</a>
+            <a class = "login-button" href = "{{ url_for("login") }}">Login/Sign up</a>
             </nav>
         </header>
         <img src="static/images/sample.png" alt="Hero image" class="hero-image" />
-    <form action="http://localhost:8008", method="post">
+    <form action="http://localhost:8008" method="post">
         <div class="input-container">
             <div class="input-group">
                 <label for="video-url" class="input-label">Video URL</label>
