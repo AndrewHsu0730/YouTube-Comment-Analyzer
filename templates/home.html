@@ -17,7 +17,7 @@
                     <li><a href="{{ url_for("contact") }}">Contact</a></li>
                     <li><a href="{{ url_for("privacy")}}">Privacy Policy</a></li>
                     <li><a href="{{ url_for("terms") }}">Terms of Use</a></li>
-                    <li><a href = "{{ url_for("login") }}">login/sign up</a></li>
+                    <li><a href = "{{ url_for("login") }}">Login/Sign up</a></li>
                 </ul>
             </nav>
         </div>
@@ -31,8 +31,6 @@
             <button id = "generate" type="submit">Generate Stats</button>
         </div>
         <input type="number" id="pages" name="pages" placeholder="Pages Of Comments you want (100 comments per page)" required>
-        <input type="checkbox" id="flag" name="flag" value = "1">
-        <label id = "translate" for="flag">Translate, if text is not English</label><br><br>
     </form>
     <p1>
         To generate a statistics report, paste the URL for the website in the textbox above, then enter the number of pages you want (100 comments per page)

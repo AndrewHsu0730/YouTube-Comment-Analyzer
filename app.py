@@ -38,7 +38,6 @@ def read_url():
     pages = request.form["pages"]
     vid = urlToVid(url)
     word_comments,comments = getComment(vid, pages) # Process comments
-    print(word_comments)
     wc = generateWordCloud(word_comments) # Generate word cloud
     wc.savefig(os.path.join("static", "images", "word_cloud.png")) # Save the word cloud
     sentimentDict = calculateScore(comments)
