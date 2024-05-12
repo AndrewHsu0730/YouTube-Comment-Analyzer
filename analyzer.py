@@ -110,12 +110,10 @@ def generateWordCloud(comments):
 
 def calculateScore(comments):
     scores = list(map(analyzer.polarity_scores,comments))
-    print(scores)
     sentiment = list(map(lambda score:identifySentiment(score["compound"]),scores))
     sentimentDict = {"Postive":sentiment.count("Positive"),
                      "Negative":sentiment.count("Negative"),
                      "Neutral":sentiment.count("Neutral")}
-    print(sentimentDict)
     return sentimentDict
 
 def identifySentiment(score):
