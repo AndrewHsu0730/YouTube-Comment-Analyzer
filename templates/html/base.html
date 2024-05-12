@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}InsightForge{% endblock %}</title>
+  </head>
+  <body>
+    <div class="dropdown">
+      <div class="topnav">
+        <nav>
+          <ul>
+            <li><a class="active" href="home">Home</a></li>
+            <li><a class="FAQ" href="{{ url_for('html.faq') }}">FAQ</a></li>
+            <li><a href="{{ url_for('html.about') }}">About Us</a></li>
+            <li><a href="{{ url_for('html.contact') }}">Contact</a></li>
+            <li><a href="{{ url_for('html.privacy')}}">Privacy Policy</a></li>
+            <li><a href="{{ url_for('html.terms') }}">Terms of Use</a></li>
+            <li>
+              <a href="{{ url_for('authorization.home') }}">login/sign up</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    {% block content %} {% endblock %}
+  </body>
+</html>
