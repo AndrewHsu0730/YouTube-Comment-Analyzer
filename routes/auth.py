@@ -21,12 +21,12 @@ def register():
 def login_post():
     username = request.form.get("username")
     password = request.form.get("password")
-    remember = True if request.form.get("remember") else False
+    # remember = True if request.form.get("remember") else False
     statement = db.select(User).where(User.username == username)
     user = db.session.execute(statement).scalar()
     if not user or not check_password_hash(user.password, password):
         return redirect(url_for("authorization.home"))
-    login_user(user, remember=remember)
+    login_user(user)
     return redirect(url_for("html.home"))
 
 @auth_routes_bp.route("/logout")

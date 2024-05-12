@@ -1,6 +1,6 @@
 from app import app
 from database import db
-from models import User, Videos, Comments
+from models import User, Video, Comment
 
 # This is the file that will be used to create the tables in the database
 def create_tables():

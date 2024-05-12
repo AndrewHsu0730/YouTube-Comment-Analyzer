@@ -4,7 +4,7 @@ from database import db
 from flask_login import UserMixin
 from datetime import datetime
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = mapped_column(Integer, primary_key=True)
     username = mapped_column(String(100), unique=True, nullable=False)
     password = mapped_column(String(255), nullable=False)
