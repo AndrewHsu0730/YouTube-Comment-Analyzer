@@ -22,15 +22,16 @@
             </nav>
         </div>
     </div>
-    <h1>YouTube Comment Analyzer</h1>
-    <img src="static/images/InsightForge.png" alt="Insight Forge logo for YouTube Comment Analyzer">
+    <img src="static/images/sample.png" alt="Sample Image">
+
     <form action="http://localhost:8008", method="post">
-        <label id = "paste" for="url">Paste your video URL below:</label><br>
-        <div>
-            <input type="text" id="url" name="url" placeholder="Example: https://www.youtube.com/watch?v=dQw4w9WgXcQ" required>
-            <button id = "generate" type="submit">Generate Stats</button>
+        <label for="url"><h2>Paste your video URL below</h2></label><br>
+        <div id="input">
+            <span><input type="text" id="url" name="url" placeholder="Example: https://www.youtube.com/watch?v=dQw4w9WgXcQ" required></span>
+            <span><input type="number" id="pages" name="pages" placeholder="Pages Of Comments you want (100 comments per page)" required></span>
         </div>
-        <input type="number" id="pages" name="pages" placeholder="Pages Of Comments you want (100 comments per page)" required>
+        <button id = "generate" type="submit">Generate Stats</button>
+        
     </form>
     <p1>
         To generate a statistics report, paste the URL for the website in the textbox above, then enter the number of pages you want (100 comments per page)

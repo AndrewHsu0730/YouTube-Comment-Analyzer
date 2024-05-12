@@ -1,7 +1,10 @@
 body {
-    max-width: 849px;
     margin: auto;
     background-color: white;
+}
+
+.dropdown{
+    background-color: #333;
 }
 
 ul {
@@ -11,76 +14,70 @@ ul {
     margin: 0;
     padding: 0;
     background-color: #333;
-
+    
 }
 
-a:link { 
-    text-decoration: none; 
-    color: antiquewhite;
-  } 
-
-a:visited { 
+a:link {
     text-decoration: none;
     color: antiquewhite;
-  } 
+}
 
-li a:hover { 
+a:visited {
     text-decoration: none;
-  }  
+    color: antiquewhite;
+}
 
-li a{
+li a:hover {
+    text-decoration: none;
+}
+
+li a {
     display: inline-block;
     color: white;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
-  }
+}
 
 li:last-of-type {
-    margin-left: 179px;
+    position: absolute;
+    right: 0px;
 }
 
 li a:hover {
     background-color: rgb(255, 69, 69);
 }
 
-h1 {
-    color: rgb(255, 0, 0);
-    text-align: center;
-}
-
 img {
-    width: 15em;
-    height: 15em;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
-#paste {
-    font-size: 18px
+#input{
+    margin-left: auto;
+    margin-right: auto;
 }
 
 div {
     display: flex;
-    margin-bottom: 20px;
+}
+
+form{
+    text-align: center;
+    align-items: center;
 }
 
 #url {
-    height: 55px;
-    width: 45rem;
-    font-size: 18px;
-    border-color: rgb(255,0,0);
-    border-radius: 5px;
+}
+
+#pages {
+
 }
 
 #generate {
-    margin-left:3px;
-    height: 60px;
-    width: 10rem;
     font-size: 18px;
-    background-color: rgb(255, 0, 0);
-    border-color: rgb(255, 0, 0);
+    background-color: rgb(255, 69, 69);
     color: white;
     border-radius: 5px;
 }
@@ -89,13 +86,7 @@ div {
     color: black;
 }
 
-#pages {
-    margin-right: 50px;
-    margin-bottom: 50px;
-    width: 25rem;
-    height: 50px;
-    font-size: 15px;
-}
+
 
 #translate {
     font-size: 18px;
