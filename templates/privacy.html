@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy</title>
-    <link rel="stylesheet" href = "{{ url_for('static', filename='privacy.css') }}">
+    <title>Homepage</title>
+    <link rel="stylesheet" href = "{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-   <div class="dropdown">
-        <div class="topnav">
-            <nav>
-                <ul>
-                    <li><a class="active" href="{{ url_for("home") }}">Home</a></li>
-                    <li><a class = "FAQ" href = "{{ url_for("faq") }}">FAQ</a></li>
-                    <li><a href="{{ url_for("about") }}">About Us</a></li>
-                    <li><a href="{{ url_for("contact") }}">Contact</a></li>
-                    <li><a href="#privacy">Privacy Policy</a></li>
-                    <li><a href="{{ url_for("terms") }}">Terms of Use</a></li>
-                    <li><a href = "{{ url_for("login") }}">login/sign up</a></li>
-                </ul>
+    <div class="container">
+        <header class="header">
+          <div class="logo-container">
+            <h1 class="logo-text">InsightForge</h1>
+            <img src="static/images/InsightForge.png" alt="InsightForge logo" class="logo-image" />
+          </div>
+          <nav class="nav-menu">
+            <a class = "nav-item" href = "{{ url_for("home") }}">Home</a>
+            <a class = "nav-item" href="{{ url_for("home") }}">Tutorial</a>
+            <a class = "nav-item" href="{{ url_for("home") }}">Dashboard</a>
+            <a class = "nav-item" href="{{ url_for("home")}}">About Us</a>
+            <a class = "nav-item" href="{{ url_for("home") }}">Terms of Use</a>
+            <a class = "login-button" href = "{{ url_for("home") }}">Login/Sign up</a>
             </nav>
-        </div>
-    </div>
-    <h1>Privacy Use</h1>
+        </header>
 </body>
 </html>

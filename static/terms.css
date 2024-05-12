@@ -1,50 +1,92 @@
-body{
-    max-width: 849px;
-    margin: auto;
-    background-color: white;
+body {
+  padding: 0px;
+  margin: 0px;
+  width: auto;
 }
 
-ul {
-    display: flex;
-    flex-direction: row;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    background-color: #333;
-
+.container {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 80px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 150%;
 }
 
-a:link { 
-    text-decoration: none; 
-    color: antiquewhite;
-  } 
+.header {
+  background-color: #e2e2e2;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: #000;
+}
 
-a:visited { 
-    text-decoration: none;
-    color: antiquewhite;
-  } 
-
-li a:hover { 
-    text-decoration: none;
-  }  
-
-li a{
-    display: inline-block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+@media (max-width: 991px) {
+  .header {
+      flex-wrap: wrap;
+      padding: 0 20px;
+      max-width: 100%;
   }
-
-li:last-of-type {
-    margin-left: 179px;
 }
 
-li a:hover {
-    background-color: rgb(255, 69, 69);
+.logo-container {
+  display: flex;
+  gap: 3px;
+  white-space: nowrap;
+  margin-left:20px
 }
 
-h1 {
-    color: rgb(255, 0, 0);
-    text-align: center;
+@media (max-width: 991px) {
+  .logo-container {
+      white-space: initial;
+  }
+}
+
+.logo-text {
+  font-family: Inter, sans-serif;
+  margin: auto 0;
+  flex-grow: 1;
+}
+
+.logo-image {
+  width: 92px;
+  aspect-ratio: 1.03;
+  object-fit: auto;
+  object-position: center;
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 20px;
+  margin: auto 0;
+  margin-right:20px
+
+}
+
+@media (max-width: 991px) {
+  .nav-menu {
+      flex-wrap: wrap;
+  }
+}
+
+.nav-item {
+  font-family: Inter, sans-serif;
+  margin: auto 0;
+  align-self: stretch;
+}
+
+.login-button {
+  font: 16px Inter, sans-serif;
+  color: #fff;
+  background-color: #000;
+  border-radius: 8px;
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+  padding: 14px 24px;
+  justify-content: center;
+  align-self: stretch;
 }
