@@ -34,7 +34,7 @@ def read_url():
     sentimentDict = calculateScore(comments)
     pie_chart = getPieChart(sentimentDict) # Generate pie chart
     pie_chart.savefig(os.path.join("static", "images", "pie_chart.png")) # Save the pie chart
-    return render_template("dashboard.html")
+    return render_template("/html/dashboard.html")
 
 if __name__ == "__main__":
     app.run(debug = True, host = "localhost", port=8008)
