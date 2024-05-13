@@ -1,2 +1,5 @@
 /__pycache__
-static/images/
+/routes/__pycache__
+db/
+/static/images/word_cloud.png
+/static/images/pie_chart.png
