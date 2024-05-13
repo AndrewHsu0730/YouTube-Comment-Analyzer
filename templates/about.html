@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href = "{{ url_for('static', filename='basic.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+          <div class="logo-container">
+            <h1 class="logo-text">InsightForge</h1>
+            <img src="static/images/InsightForge.png" alt="InsightForge logo" class="logo-image" />
+          </div>
+          <nav class="nav-menu">
+            <a class = "nav-item" href = "{{ url_for("home") }}">Home</a>
+            <a class = "nav-item" href="{{ url_for("home") }}">Tutorial</a>
+            <a class = "nav-item" href="{{ url_for("home") }}">Dashboard</a>
+            <a class = "nav-item" href="{{ url_for("home")}}">About Us</a>
+            <a class = "nav-item" href="{{ url_for("home") }}">Terms of Use</a>
+            <a class = "login-button" href = "{{ url_for("home") }}">Login/Sign up</a>
+            </nav>
+        </header>
+</body>
+</html>
