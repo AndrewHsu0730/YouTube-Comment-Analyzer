@@ -7,27 +7,33 @@ import os
 html_routes_bp = Blueprint("html", __name__)
 
 @html_routes_bp.route("/home")
+@login_required
 def home():
     print(current_user)
     return render_template("/html/home.html", user=current_user)
 
 @html_routes_bp.route("/faq")
+@login_required
 def faq():
     return render_template("/html/faq.html")
 
 @html_routes_bp.route("/about")
+@login_required
 def about():
     return render_template("/html/about.html")
 
 @html_routes_bp.route("/contact")
+@login_required
 def contact():
     return render_template("/html/contact.html")
 
 @html_routes_bp.route("/privacy")
+@login_required
 def privacy():
     return render_template("/html/privacy.html")
 
 @html_routes_bp.route("/terms")
+@login_required
 def terms():
     return render_template("/html/terms.html")
 
