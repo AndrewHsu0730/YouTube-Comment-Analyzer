@@ -6,16 +6,13 @@ from flask_login import login_user, login_required, logout_user
 
 auth_routes_bp = Blueprint("authorization", __name__)
 
-
 @auth_routes_bp.route("/")
 def home():
     return render_template("/auth/login.html")
 
-
 @auth_routes_bp.route("/auth/register")
 def register():
     return render_template("/auth/signup.html")
-
 
 @auth_routes_bp.route("/auth/login", methods=["POST"])
 def login_post():
