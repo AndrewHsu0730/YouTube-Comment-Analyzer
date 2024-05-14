@@ -43,10 +43,33 @@ def read_url():
     pages = request.form["pages"]
     vid = urlToVid(url)
     word_comments,comments = getComment(vid, pages) # Process comments
-    print(word_comments)
     wc = generateWordCloud(word_comments) # Generate word cloud
     wc.savefig(os.path.join("static", "images", "word_cloud.png")) # Save the word cloud
     sentimentDict = calculateScore(comments)
+    print(sentimentDict)
     pie_chart = getPieChart(sentimentDict) # Generate pie chart
     pie_chart.savefig(os.path.join("static", "images", "pie_chart.png")) # Save the pie chart
+    bar_chart = getBarChart(sentimentDict) # Generate bar chart
+    bar_chart.savefig(os.path.join("static", "images", "bar_chart.png")) # Save the bar chart
+    common_chart = getCommonChart(word_comments) # Generate pie chart
+    common_chart.savefig(os.path.join("static", "images", "common_chart.png")) # Save the pie chart
     return render_template("/html/dashboard.html")
+
+
+@html_routes_bp.route("/select" , methods=['GET', 'POST'])
+def select():
+    images = [
+        {'url': url_for('static', filename='images/pie_chart.png'), 'value': 'pie_chart'},
+        {'url': url_for('static', filename='images/bar_chart.png'), 'value': 'bar_chart'},
+        {'url': url_for('static', filename='images/common_chart.png'), 'value': 'common_chart'}
+    ]
+
+    selected_image_url = images[0]['url'] 
+    if request.method == 'POST':
+        selected_value = request.form['image']
+        for image in images:
+            if image['value'] == selected_value:
+                selected_image_url = image['url']
+                break
+
+    return render_template('/html/dashboard.html', images=images, selected_image_url=selected_image_url)
