@@ -8,6 +8,7 @@ from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from googleapiclient.discovery import build
 from api_key import API_KEY
+import matplotlib.ticker as ticker
 import matplotlib
 matplotlib.use('Agg')
 
@@ -47,7 +48,6 @@ def processComment(comment):
     comment = comment.replace("_", " ")
     comment = re.sub(r"\s+", " ", comment)
     comment = comment.strip().lower()
-
     return comment
 
 
@@ -58,7 +58,13 @@ def getComment(vid, pages):
         raise Exception(
             "The number of pages to extract can't exceed 2500 due to limit.")
     n = 0
-
+    
+    response = youtube.videos().list(
+                    part="snippet",
+                    id=vid,
+                ).execute()
+    title = response["items"][0]["snippet"]["title"]
+    
     while n < int(pages):
         try:
             response = youtube.commentThreads().list(
@@ -67,7 +73,6 @@ def getComment(vid, pages):
                 maxResults=100,
                 pageToken=response["nextPageToken"]
             ).execute()
-
             for item in response["items"]:
                 sentence = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
                 sentence = processComment(sentence)
@@ -97,7 +102,7 @@ def getComment(vid, pages):
                             word_comments[word] = word_comments.get(
                                 word, 0) + 1
         n += 1
-    return word_comments, comments
+    return title,word_comments, comments
 
 
 def generateWordCloud(comments):
@@ -141,12 +146,19 @@ def getPieChart(sentimentDict):
 
 
 def getStats(date, likes, dislike, view):
-    fig, ax1 = plt.subplots()
-    ax1.bar(date, dislike, width=0.4)
-    ax1.bar(date, likes, bottom=dislike, width=0.4)
+    plt.clf()
+    fig, ax1 = plt.subplots(figsize=(12, 6))
+    ax1.bar(date, dislike, width=0.4,label='Dislikes')
+    ax1.bar(date, likes, bottom=dislike, width=0.4,label='Likes')
     ax2 = ax1.twinx()
-    ax2.plot(date, view, color='y')
+    ax2.plot(date, view, color='y',label='Views')
     fig.tight_layout()
+    formatter = ticker.FuncFormatter(lambda x, pos: '{:,.0f}'.format(x / 1000) + 'K' if x < 1000000 else '{:,.0f}M'.format(x / 1000000) if x < 1000000000 else '{:,.0f}B'.format(x / 1000000000))    
+    ax1.yaxis.set_major_formatter(formatter)
+    ax2.yaxis.set_major_formatter(formatter)
+    ax1.legend(loc='upper left')
+    ax2.legend(loc='upper right')
+    return plt
     plt.show()
 
 
