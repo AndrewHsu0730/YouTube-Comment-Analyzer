@@ -1,5 +1,7 @@
 import pytest
 from models import User, Video
+from database import db
+from app import app 
 
 def test_new_user():
     with pytest.raises(TypeError):
@@ -16,6 +18,8 @@ def test_video():
     assert video is not None
 
 def test_user_video_connection():
-    user = User(username="Ash", password="thestressedguy")
-    video = Video(title="Title", url="URL", user_id=1)
-    assert (user.id) == 1
+    with app.app_context():
+        user = User(username="vince", password="thestressedguy")
+        db.session.add(user)
+        db.session.commit()
+        assert (user.id) == 3
