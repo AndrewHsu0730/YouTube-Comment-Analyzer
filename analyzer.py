@@ -159,3 +159,19 @@ def getStats(date, likes, dislike, view):
     ax1.legend(loc='upper left')
     ax2.legend(loc='upper right')
     return plt
+    plt.show()
+
+
+def getBarChart(sentimentDict):
+    plt.clf()
+    plt.bar(sentimentDict.keys(), sentimentDict.values(), 0.4)
+    plt.title("Number of Comments by Sentiment as a bar chart")
+    return plt
+
+
+def getCommonChart(word_comments):  
+    plt.clf()
+    res = dict(sorted(word_comments.items(), key = lambda x: x[1], reverse = True)[:5])
+    plt.bar(list(res.keys()), list(res.values()), 0.5)
+    plt.title("Top 5 most used words")
+    return plt
