@@ -5,10 +5,14 @@ from flask_login import UserMixin
 from datetime import datetime
 
 class User(db.Model, UserMixin):
-    id = mapped_column(Integer, primary_key=True)
+    id = mapped_column(Integer, primary_key=True, autoincrement=True)
     username = mapped_column(String(100), unique=True, nullable=False)
     password = mapped_column(String(255), nullable=False)
     videos = db.relationship('Video', back_populates='user', lazy=True)
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
 
 class Video(db.Model):
     id = mapped_column(Integer, primary_key=True)
@@ -17,6 +21,11 @@ class Video(db.Model):
     user_id = mapped_column(Integer, ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', back_populates='videos')
     comments = db.relationship('Comment', back_populates='video', lazy=True)
+
+    def __init__(self, title, url, user_id):
+        self.title = title
+        self.url = url
+        self.user_id = user_id
 
 class Comment(db.Model):
     id = mapped_column(Integer, primary_key=True)
