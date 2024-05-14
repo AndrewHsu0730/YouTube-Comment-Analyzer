@@ -2,6 +2,19 @@
 <h1>Analysis Report</h1>
 <h4>Dashboard</h4>
 <img src="{{ url_for('static', filename = 'images/word_cloud.png') }}" /><br>
-<img src="{{ url_for('static', filename = 'images/pie_chart.png') }}" /><br>
-<img src="{{ url_for('static', filename = 'images/stats.png') }}" /><br
+
+<p>Select one option from drop-down list:</p>
+<form method="post" action="http://localhost:8008/views/select">
+    <select name="image">
+        <option value="pie_chart">Pie Chart for Sentiment Score</option>
+        <option value="bar_chart">Bar Chart for Sentiment Score</option>
+        <option value="common_chart">Top 5 most used words</option>
+    </select><br>
+    <input type="submit" value="Submit">
+</form>
+{% if selected_image_url %}
+    <br>
+    <img src="{{ selected_image_url }}" alt="Selected Image">
+<img src="{{ url_for('static', filename = 'images/stats.png') }}" /><br>
+{% endif %}
 {% endblock %}

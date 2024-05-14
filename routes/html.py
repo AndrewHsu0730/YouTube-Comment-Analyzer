@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint, session
+from flask import render_template, request, Blueprint, url_for
 from flask_login import login_required, current_user
 from analyzer import *
 from datetime import datetime
@@ -41,14 +41,13 @@ def terms():
 @html_routes_bp.route("/dashboard", methods = ["POST"])
 def read_url():
     from manage import new_video
-    from models import User,Video
+    from models import Video
     date = datetime.now().strftime("%Y-%m-%d %H:%M")                             
     url = request.form["url"]
     pages = request.form["pages"]
     vid = urlToVid(url)
     like_count, dislike_count, view_count = getStat(vid)
     title,word_comments,comments = getComment(vid, pages) # Process comments
-    print(current_user)
     most_occured_word = max(word_comments, key=word_comments.get)
     new_video(current_user.id,title,url,view_count,like_count,dislike_count,most_occured_word,date)
     wc = generateWordCloud(word_comments) # Generate word cloud
@@ -56,6 +55,10 @@ def read_url():
     sentimentDict = calculateScore(comments)
     pie_chart = getPieChart(sentimentDict) # Generate pie chart
     pie_chart.savefig(os.path.join("static", "images", "pie_chart.png")) # Save the pie chart
+    bar_chart = getBarChart(sentimentDict) # Generate bar chart
+    bar_chart.savefig(os.path.join("static", "images", "bar_chart.png")) # Save the bar chart
+    common_chart = getCommonChart(word_comments) # Generate pie chart
+    common_chart.savefig(os.path.join("static", "images", "common_chart.png")) # Save the pie chart
     videos_with_same_url = Video.query.filter_by(url=url,user_id =current_user.id).all()
     dates_list = [video.date for video in videos_with_same_url]
     likes_list = [video.likes for video in videos_with_same_url]
@@ -63,4 +66,24 @@ def read_url():
     views_list = [video.views for video in videos_with_same_url]
     stats = getStats(dates_list,likes_list,dislikes_list,views_list)
     stats.savefig(os.path.join("static", "images", "stats.png"))
+    
     return render_template("/html/dashboard.html")
+
+
+@html_routes_bp.route("/select" , methods=['GET', 'POST'])
+def select():
+    images = [
+        {'url': url_for('static', filename='images/pie_chart.png'), 'value': 'pie_chart'},
+        {'url': url_for('static', filename='images/bar_chart.png'), 'value': 'bar_chart'},
+        {'url': url_for('static', filename='images/common_chart.png'), 'value': 'common_chart'}
+    ]
+
+    selected_image_url = images[0]['url'] 
+    if request.method == 'POST':
+        selected_value = request.form['image']
+        for image in images:
+            if image['value'] == selected_value:
+                selected_image_url = image['url']
+                break
+
+    return render_template('/html/dashboard.html', images=images, selected_image_url=selected_image_url)
