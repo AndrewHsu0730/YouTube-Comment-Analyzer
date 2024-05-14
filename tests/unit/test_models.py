@@ -19,7 +19,7 @@ def test_video():
 
 def test_user_video_connection():
     with app.app_context():
-        user = User(username="vince", password="thestressedguy")
+        user = User(username="homie", password="thestressedguy")
         db.session.add(user)
         db.session.commit()
-        assert (user.id) == 3
+        assert (user.id) == 4

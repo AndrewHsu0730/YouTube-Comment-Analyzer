@@ -3,6 +3,7 @@ from sqlalchemy.orm import mapped_column, relationship
 from database import db
 from flask_login import UserMixin
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model, UserMixin):
     id = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -12,7 +13,7 @@ class User(db.Model, UserMixin):
 
     def __init__(self, username, password):
         self.username = username
-        self.password = password
+        self.password = generate_password_hash(password, method='scrypt')
 
 class Video(db.Model):
     id = mapped_column(Integer, primary_key=True)
