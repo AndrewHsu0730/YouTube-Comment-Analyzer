@@ -2,7 +2,7 @@
 <h1>Analysis Report</h1>
 <h4>Dashboard</h4>
 <img src="{{ url_for('static', filename = 'images/word_cloud.png') }}" /><br>
-
+<img src="{{ url_for('static', filename = 'images/stats.png') }}" /><br>
 <p>Select one option from drop-down list:</p>
 <form method="post" action="http://localhost:8008/views/select">
     <select name="image">
@@ -15,6 +15,5 @@
 {% if selected_image_url %}
     <br>
     <img src="{{ selected_image_url }}" alt="Selected Image">
-<img src="{{ url_for('static', filename = 'images/stats.png') }}" /><br>
 {% endif %}
 {% endblock %}

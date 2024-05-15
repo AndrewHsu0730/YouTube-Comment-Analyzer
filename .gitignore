@@ -1,6 +1,8 @@
 /__pycache__
 /routes/__pycache__
-db/
+/db
 /static/images/word_cloud.png
+/static/images/bar_chart.png
 /static/images/pie_chart.png
 /static/images/stats.png
+/static/images/common_chart.png
