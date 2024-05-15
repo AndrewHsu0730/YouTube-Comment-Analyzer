@@ -6,7 +6,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model, UserMixin):
-    id = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id = mapped_column(Integer, primary_key=True)
     username = mapped_column(String(100), unique=True, nullable=False)
     password = mapped_column(String(255), nullable=False)
     videos = db.relationship('Video', back_populates='user', lazy=True)
