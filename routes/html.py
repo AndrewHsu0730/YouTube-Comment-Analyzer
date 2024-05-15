@@ -40,7 +40,9 @@ def terms():
 @html_routes_bp.route("/dashboard", methods = ["POST"])
 def read_url():
     from manage import new_video
-
+        
+    date = datetime.now().strftime("%Y-%m-%d %H:%M")     
+                            
     url = request.form["url"]
     pages = request.form["pages"]
     
@@ -48,10 +50,12 @@ def read_url():
     
     like_count, dislike_count, view_count = getStat(vid) #Fetch data from returndislike API
     word_comments,comments = getComment(vid, pages) # Process comments
-    title = getTitle(vid)
+
     most_occured_word = max(word_comments, key=word_comments.get) #Get mosr common word in 
     
-    new_video(current_user.id,title,url,view_count,like_count,dislike_count,most_occured_word)
+    new_video(current_user.id,getTitle(vid),url,view_count,like_count,dislike_count,most_occured_word)
+    wc = generateWordCloud(word_comments) # Generate word cloud
+    wc.savefig(os.path.join("static", "images", "word_cloud.png")) # Save the word cloud
     
     sentimentDict = calculateScore(comments)
 
