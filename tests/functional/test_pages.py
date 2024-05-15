@@ -1,8 +1,8 @@
 from conftest import create_app
 from flask_login import LoginManager
 from models import User
-
-app = create_app()
+from app import app
+from database import db
 
 login_manager = LoginManager()
 login_manager.login_view = "authorization.home"
@@ -13,6 +13,16 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 with app.test_client() as test_client:
-    def test_landing_page():
-        response = test_client.get("localhost:8008/")
+    def test_login_page():
+        response = test_client.get("/")
         assert response.status_code == 200
+        assert b"Don't have an account?" in response.data
+
+    def test_signup_page():
+        response = test_client.get("/auth/register")
+        assert response.status_code == 200
+        assert b"Already have an account?" in response.data
+
+    def test_redirect():
+        response = test_client.get("/views/home")
+        assert response.status_code == 302
