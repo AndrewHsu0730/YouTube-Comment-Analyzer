@@ -1,55 +1,24 @@
-from flask import Flask, render_template, request
-import os
-import pandas as pd
-from analyzer import extract_comment, translate_comment, process_comment, generate_word_cloud, calculate_score, identify_sentiment, generate_pie_chart
+from flask import Flask
+from database import db
+from pathlib import Path
+from routes import auth_routes_bp, html_routes_bp
+from flask_login import LoginManager
+from models import User
 
 app = Flask(__name__)
+app.secret_key = "supersecretkey"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+app.instance_path = Path("./db").resolve()
 
-@app.route("/")
-def home():
-    return render_template("home.html") 
-
-@app.route("/login")
-def login():
-    return render_template("login.html")
-
-@app.route("/faq")
-def faq():
-    return render_template("faq.html")
-
-@app.route("/about")
-def about():
-    return render_template("about.html")
-
-@app.route("/contact")
-def contact():
-    return render_template("contact.html")
-
-@app.route("/privacy")
-def privacy():
-    return render_template("privacy.html")
-
-@app.route("/terms")
-def terms():
-    return render_template("terms.html")
-
-@app.route("/", methods = ["POST"])
-def read_url():
-    url = request.form["url"]
-    pages = request.form["pages"]
-    comment_list = extract_comment(url, pages) # Extract comments
-    df = pd.DataFrame(comment_list, columns = ["Comments"])
-    if request.form.get('flag') == 1:
-        df["Comments"] = df["Comments"].apply(translate_comment) # Translate comments
-    df = process_comment(df, "Comments") # Process comments
-    word_cloud = generate_word_cloud(df["Comments"]) # Generate word cloud
-    word_cloud.savefig(os.path.join("static", "images", "word_cloud.png")) # Save the word cloud
-    df = calculate_score(df, "Comments")
-    df["Sentiments"] = df["Compound Scores"].apply(identify_sentiment)
-    sentiment_count_df = df["Sentiments"].value_counts().sort_index(ascending = False)
-    pie_chart = generate_pie_chart(sentiment_count_df) # Generate pie chart
-    pie_chart.savefig(os.path.join("static", "images", "pie_chart.png")) # Save the pie chart
-    return render_template("dashboard.html")
+db.init_app(app)
+app.register_blueprint(auth_routes_bp, url_prefix="/")
+app.register_blueprint(html_routes_bp, url_prefix="/views")
+login_manager = LoginManager()
+login_manager.login_view = "authorization.home"
+login_manager.init_app(app)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 if __name__ == "__main__":
-    app.run(debug = True, host = "localhost", port = 8008)
+    app.run(debug = True, host = "localhost", port=8008)
