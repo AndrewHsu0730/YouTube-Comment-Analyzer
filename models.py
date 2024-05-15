@@ -1,8 +1,7 @@
-from sqlalchemy import Numeric, ForeignKey, Integer, String, Text
+from sqlalchemy import Numeric, ForeignKey, Integer, String, Text, DateTime
 from sqlalchemy.orm import mapped_column, relationship
 from database import db
 from flask_login import UserMixin
-from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model, UserMixin):
@@ -22,7 +21,7 @@ class Video(db.Model):
     views = mapped_column(Integer, nullable=False)
     likes = mapped_column(Integer, nullable=False)
     dislikes = mapped_column(Integer, nullable=False)
-    date = mapped_column(datetime, nullable=False)
+    date = mapped_column(DateTime, nullable=False)
     user_id = mapped_column(Integer, ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', back_populates='videos')
     comments = db.relationship('Comment', back_populates='video', lazy=True)

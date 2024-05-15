@@ -1,6 +1,10 @@
 import pytest
-# from models import User, Video
-# from app import app
+from flask import Flask
+from database import db
+from pathlib import Path
+from routes import auth_routes_bp, html_routes_bp
+from flask_login import LoginManager
+from models import User
 
 # @pytest.fixture
 # def invalid_user_1():
@@ -17,8 +21,14 @@ import pytest
 #     valid_user = User(username="Ash", password="thestressedguy")
 #     return valid_user
 
-# @pytest.fixture(scope="module")
-# def client():
-#     app_for_testing = app()
-#     client = app_for_testing.test_client()
-#     yield client
+def create_app():
+    app = Flask(__name__)
+    app.secret_key = "supersecretkey"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+    app.instance_path = Path("./db").resolve()
+
+    db.init_app(app)
+    app.register_blueprint(auth_routes_bp, url_prefix="/")
+    app.register_blueprint(html_routes_bp, url_prefix="/views")
+
+    return app
