@@ -40,9 +40,7 @@ def terms():
 @html_routes_bp.route("/dashboard", methods = ["POST"])
 def read_url():
     from manage import new_video
-    
-    date = datetime.now().strftime("%Y-%m-%d %H:%M")     
-                            
+
     url = request.form["url"]
     pages = request.form["pages"]
     
@@ -53,7 +51,7 @@ def read_url():
     title = getTitle(vid)
     most_occured_word = max(word_comments, key=word_comments.get) #Get mosr common word in 
     
-    new_video(current_user.id,title,url,view_count,like_count,dislike_count,most_occured_word,date)
+    new_video(current_user.id,title,url,view_count,like_count,dislike_count,most_occured_word)
     
     sentimentDict = calculateScore(comments)
 

@@ -70,35 +70,44 @@ def getComment(vid, pages):
         return
 
     n = 0
+    next_page_token = None
 
     while n < int(pages):
         try:
-            response = youtube.commentThreads().list(
-                part="snippet",
-                videoId=vid,
-                maxResults=100,
-                pageToken=response["nextPageToken"]
-            ).execute()
-        except:
-            response = youtube.commentThreads().list(
-                part="snippet",
-                videoId=vid,
-                maxResults=100).execute()
-
-        for item in response["items"]:
-            sentence = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
-            sentence = processComment(sentence)
-            if sentence == "" or sentence == " ":
-                pass
+            if next_page_token:
+                response = youtube.commentThreads().list(
+                    part="snippet",
+                    videoId=vid,
+                    maxResults=100,
+                    pageToken=next_page_token
+                ).execute()
             else:
-                comments.append(sentence)
-                for word in sentence.split():
-                    if word not in stopwords:
-                        word_comments[word.title()] = word_comments.get(
-                            word, 0) + 1
-        n += 1
-    return word_comments, comments
+                response = youtube.commentThreads().list(
+                    part="snippet",
+                    videoId=vid,
+                    maxResults=100
+                ).execute()
+            
+            for item in response["items"]:
+                sentence = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
+                sentence = processComment(sentence)
+                if sentence and sentence.strip():
+                    comments.append(sentence)
+                    for word in sentence.split():
+                        if word not in stopwords:
+                            word_comments[word.title()] = word_comments.get(word.title(), 0) + 1
+            
+            next_page_token = response.get("nextPageToken")
+            if not next_page_token:
+                break  
+            
+            n += 1
+        
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            break
 
+    return word_comments, comments
 
 def generateWordCloud(comments):
     plt.clf()

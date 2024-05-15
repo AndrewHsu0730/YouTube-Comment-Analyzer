@@ -1,6 +1,7 @@
 from app import app
 from database import db
 from models import User, Video
+from datetime import datetime
 
 # This is the file that will be used to create the tables in the database
 def create_tables():
@@ -13,7 +14,7 @@ def drop_tables():
         db.drop_all()
 
 # Insert New Record to Video
-def new_video(user_id,title,url,views,likes,dislikes,word,date):
+def new_video(user_id,title,url,views,likes,dislikes,word):
     new_video = Video()
     new_video.title = title
     new_video.url = url
@@ -21,7 +22,7 @@ def new_video(user_id,title,url,views,likes,dislikes,word,date):
     new_video.likes = likes
     new_video.dislikes = dislikes
     new_video.word = word
-    new_video.date = date
+    new_video.date = datetime.now().strftime("%Y-%m-%d %H:%M")  
     user = User.query.get(user_id)
     user.videos.append(new_video)
     db.session.commit()
