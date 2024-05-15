@@ -12,6 +12,7 @@ def drop_tables():
     with app.app_context():
         db.drop_all()
 
+# Insert New Record to Video
 def new_video(user_id,title,url,views,likes,dislikes,word,date):
     new_video = Video()
     new_video.title = title

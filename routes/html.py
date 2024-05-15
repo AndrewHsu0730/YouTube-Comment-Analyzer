@@ -2,7 +2,6 @@ from flask import render_template, request, Blueprint, url_for
 from flask_login import login_required, current_user
 from analyzer import *
 from datetime import datetime
-
 import os
 
 html_routes_bp = Blueprint("html", __name__)
@@ -41,32 +40,24 @@ def terms():
 @html_routes_bp.route("/dashboard", methods = ["POST"])
 def read_url():
     from manage import new_video
-    from models import Video
-    date = datetime.now().strftime("%Y-%m-%d %H:%M")                             
+    
+    date = datetime.now().strftime("%Y-%m-%d %H:%M")     
+                            
     url = request.form["url"]
     pages = request.form["pages"]
-    vid = urlToVid(url)
-    like_count, dislike_count, view_count = getStat(vid)
-    title,word_comments,comments = getComment(vid, pages) # Process comments
-    most_occured_word = max(word_comments, key=word_comments.get)
-    new_video(current_user.id,title,url,view_count,like_count,dislike_count,most_occured_word,date)
-    wc = generateWordCloud(word_comments) # Generate word cloud
-    wc.savefig(os.path.join("static", "images", "word_cloud.png")) # Save the word cloud
-    sentimentDict = calculateScore(comments)
-    pie_chart = getPieChart(sentimentDict) # Generate pie chart
-    pie_chart.savefig(os.path.join("static", "images", "pie_chart.png")) # Save the pie chart
-    bar_chart = getBarChart(sentimentDict) # Generate bar chart
-    bar_chart.savefig(os.path.join("static", "images", "bar_chart.png")) # Save the bar chart
-    common_chart = getCommonChart(word_comments) # Generate pie chart
-    common_chart.savefig(os.path.join("static", "images", "common_chart.png")) # Save the pie chart
-    videos_with_same_url = Video.query.filter_by(url=url,user_id =current_user.id).all()
-    dates_list = [video.date for video in videos_with_same_url]
-    likes_list = [video.likes for video in videos_with_same_url]
-    dislikes_list = [video.dislikes for video in videos_with_same_url]
-    views_list = [video.views for video in videos_with_same_url]
-    stats = getStats(dates_list,likes_list,dislikes_list,views_list)
-    stats.savefig(os.path.join("static", "images", "stats.png"))
     
+    vid = urlToVid(url)
+    
+    like_count, dislike_count, view_count = getStat(vid) #Fetch data from returndislike API
+    word_comments,comments = getComment(vid, pages) # Process comments
+    title = getTitle(vid)
+    most_occured_word = max(word_comments, key=word_comments.get) #Get mosr common word in 
+    
+    new_video(current_user.id,title,url,view_count,like_count,dislike_count,most_occured_word,date)
+    
+    sentimentDict = calculateScore(comments)
+
+    getAllChart(word_comments,sentimentDict,current_user.id,url)
     return render_template("/html/dashboard.html")
 
 

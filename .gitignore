@@ -4,3 +4,5 @@ db/
 /static/images/word_cloud.png
 /static/images/pie_chart.png
 /static/images/stats.png
+/static/images/common_chart.png
+/static/images/bar_chart.png
