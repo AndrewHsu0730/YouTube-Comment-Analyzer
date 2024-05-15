@@ -1,26 +1,25 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Text
-from sqlalchemy.orm import relationship
+from sqlalchemy import Numeric, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import mapped_column, relationship
 from database import db
 from flask_login import UserMixin
+from datetime import datetime
 
 class User(db.Model, UserMixin):
-    __tablename__ = 'user'
-
-    id = Column(Integer, primary_key=True)
-    username = Column(String(100), unique=True, nullable=False)
-    password = Column(String(255), nullable=False)
-    videos = relationship('Video', back_populates='user', lazy=True)
+    id = mapped_column(Integer, primary_key=True)
+    username = mapped_column(String(100), unique=True, nullable=False)
+    password = mapped_column(String(255), nullable=False)
+    videos = db.relationship('Video', back_populates='user', lazy=True)
 
 class Video(db.Model):
-    __tablename__ = 'video'
+    id = mapped_column(Integer, primary_key=True)
+    title = mapped_column(String(255), nullable=False)
+    url = mapped_column(String(255), nullable=False)
+    user_id = mapped_column(Integer, ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', back_populates='videos')
+    comments = db.relationship('Comment', back_populates='video', lazy=True)
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String(255), nullable=False)
-    url = Column(String(255), nullable=False)
-    views = Column(Integer, nullable=False)
-    likes = Column(Integer, nullable=False)
-    dislikes = Column(Integer, nullable=False)
-    word = Column(Text, nullable=False)
-    date = Column(String(10), nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    user = relationship('User', back_populates='videos')
+class Comment(db.Model):
+    id = mapped_column(Integer, primary_key=True)
+    text = mapped_column(Text, nullable=False)
+    video_id = mapped_column(Integer, ForeignKey('video.id'), nullable=False)
+    video = db.relationship('Video', back_populates='comments')
