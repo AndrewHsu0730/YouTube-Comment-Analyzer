@@ -26,7 +26,7 @@ def test_new_user():
 
 def test_video():
     with app.app_context():
-        video = Video(title="Title", url="URL", user_id=1)
+        video = Video(title="Title", url="URL", views=1, likes=1, dislikes=1, date="2024-5-15", user_id=1)
         db.session.add(video)
         db.session.commit()
         assert video is not None
