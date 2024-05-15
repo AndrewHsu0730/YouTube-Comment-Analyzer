@@ -3,6 +3,7 @@ from sqlalchemy.orm import mapped_column, relationship
 from database import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 class User(db.Model, UserMixin):
     id = mapped_column(Integer, primary_key=True)
@@ -30,9 +31,9 @@ class Video(db.Model):
         self.title = title
         self.url = url
         self.views = views
-        self.likes - likes
+        self.likes = likes
         self.dislikes = dislikes
-        self.date = date
+        self.date = datetime.strptime(date, "%Y-%m-%d")
         self.user_id = user_id
 
 class Comment(db.Model):
