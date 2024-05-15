@@ -19,13 +19,21 @@ class Video(db.Model):
     id = mapped_column(Integer, primary_key=True)
     title = mapped_column(String(255), nullable=False)
     url = mapped_column(String(255), nullable=False)
+    views = mapped_column(Integer, nullable=False)
+    likes = mapped_column(Integer, nullable=False)
+    dislikes = mapped_column(Integer, nullable=False)
+    date = mapped_column(datetime, nullable=False)
     user_id = mapped_column(Integer, ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', back_populates='videos')
     comments = db.relationship('Comment', back_populates='video', lazy=True)
 
-    def __init__(self, title, url, user_id):
+    def __init__(self, title, url, views, likes, dislikes, date, user_id):
         self.title = title
         self.url = url
+        self.views = views
+        self.likes - likes
+        self.dislikes = dislikes
+        self.date = date
         self.user_id = user_id
 
 class Comment(db.Model):
@@ -33,3 +41,7 @@ class Comment(db.Model):
     text = mapped_column(Text, nullable=False)
     video_id = mapped_column(Integer, ForeignKey('video.id'), nullable=False)
     video = db.relationship('Video', back_populates='comments')
+
+    def __init__(self, text, video_id):
+        self.text = text
+        self.video_id = video_id
