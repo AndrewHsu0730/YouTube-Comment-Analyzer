@@ -45,7 +45,9 @@ def read_url():
     pages = request.form["pages"]
     
     vid = urlToVid(url)
+    global title
     title = getTitle(vid)
+    
     like_count, dislike_count, view_count = getStat(vid) #Fetch data from returndislike API
     word_comments,comments = getComment(vid, pages) # Process comments
     if  word_comments or comments:
@@ -54,8 +56,8 @@ def read_url():
         sentimentDict = calculateScore(comments)
         getAllChart(word_comments,sentimentDict,current_user.id,url)
     else:
-        return render_template()
-    return render_template("/html/dashboard.html", title = title, selected_image_url = url_for('static', filename='images/pie_chart.png'))
+        return render_template("/html/dashboard.html", wordcloud =  url_for('static', filename = 'images/error.png') ,title = title)
+    return render_template("/html/dashboard.html", wordcloud =  url_for('static', filename = 'images/word_cloud.png') ,title = title, selected_image_url = url_for('static', filename='images/pie_chart.png'))
 
 
 @html_routes_bp.route("/select" , methods=['GET', 'POST'])
@@ -65,7 +67,7 @@ def select():
         {'url': url_for('static', filename='images/bar_chart.png'), 'value': 'bar_chart'},
         {'url': url_for('static', filename='images/common_chart.png'), 'value': 'common_chart'}
     ]
-
+    
     selected_image_url = images[0]['url'] 
     if request.method == 'POST':
         selected_value = request.form['image']
@@ -74,4 +76,4 @@ def select():
                 selected_image_url = image['url']
                 break
 
-    return render_template('/html/dashboard.html', selected_image_url=selected_image_url)
+    return render_template('/html/dashboard.html', wordcloud =  url_for('static', filename = 'images/word_cloud.png') ,title = title,selected_image_url=selected_image_url)
