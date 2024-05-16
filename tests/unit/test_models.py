@@ -18,13 +18,13 @@ def test_new_user():
             db.session.add(user)
             db.session.commit()
 
-        user = User(username="Ash", password=generate_password_hash("thestressedguy", method="scrypt"))
+        user = User(username="admin", password=generate_password_hash("admin123", method="scrypt"))
         db.session.add(user)
         db.session.commit()
         assert user is not None
-        assert user.id == 1
-        assert user.username == "Ash"
-        assert user.password != "thestressedguy"
+        assert user.id == 5
+        assert user.username == "admin"
+        assert user.password != "admin123"
 
 def test_video():
     with app.app_context():
