@@ -1,6 +1,7 @@
 {% extends '/html/base.html' %} {% block content %}
 <h1>Analysis Report</h1>
 <h4>Dashboard</h4>
+<p>{{title}}</p>
 <img src="{{ url_for('static', filename = 'images/word_cloud.png') }}" /><br>
 <img src="{{ url_for('static', filename = 'images/stats.png') }}" /><br>
 <p>Select one option from drop-down list:</p>

@@ -40,27 +40,22 @@ def terms():
 @html_routes_bp.route("/dashboard", methods = ["POST"])
 def read_url():
     from manage import new_video
-        
-    date = datetime.now().strftime("%Y-%m-%d %H:%M")     
-                            
+                                
     url = request.form["url"]
     pages = request.form["pages"]
     
     vid = urlToVid(url)
-    
+    title = getTitle(vid)
     like_count, dislike_count, view_count = getStat(vid) #Fetch data from returndislike API
     word_comments,comments = getComment(vid, pages) # Process comments
-
-    most_occured_word = max(word_comments, key=word_comments.get) #Get mosr common word in 
-    
-    new_video(current_user.id,getTitle(vid),url,view_count,like_count,dislike_count,most_occured_word)
-    wc = generateWordCloud(word_comments) # Generate word cloud
-    wc.savefig(os.path.join("static", "images", "word_cloud.png")) # Save the word cloud
-    
-    sentimentDict = calculateScore(comments)
-
-    getAllChart(word_comments,sentimentDict,current_user.id,url)
-    return render_template("/html/dashboard.html")
+    if  word_comments or comments:
+        most_occured_word = max(word_comments, key=word_comments.get) #Get mosr common word in 
+        new_video(current_user.id,getTitle(vid),url,view_count,like_count,dislike_count,most_occured_word)
+        sentimentDict = calculateScore(comments)
+        getAllChart(word_comments,sentimentDict,current_user.id,url)
+    else:
+        return render_template()
+    return render_template("/html/dashboard.html", title = title, selected_image_url = url_for('static', filename='images/pie_chart.png'))
 
 
 @html_routes_bp.route("/select" , methods=['GET', 'POST'])
@@ -79,4 +74,4 @@ def select():
                 selected_image_url = image['url']
                 break
 
-    return render_template('/html/dashboard.html', images=images, selected_image_url=selected_image_url)
+    return render_template('/html/dashboard.html', selected_image_url=selected_image_url)
