@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash
 from datetime import datetime
 
 class User(db.Model, UserMixin):
+    __tablename__ = 'user'
     id = mapped_column(Integer, primary_key=True)
     username = mapped_column(String(100), unique=True, nullable=False)
     password = mapped_column(String(255), nullable=False)
@@ -16,6 +17,7 @@ class User(db.Model, UserMixin):
         self.password = generate_password_hash(password, method='scrypt')
 
 class Video(db.Model):
+    __tablename__ = 'video'
     id = mapped_column(Integer, primary_key=True)
     title = mapped_column(String(255), nullable=False)
     url = mapped_column(String(255), nullable=False)
@@ -37,6 +39,7 @@ class Video(db.Model):
         self.user_id = user_id
 
 class Comment(db.Model):
+    __tablename__ = "comment"
     id = mapped_column(Integer, primary_key=True)
     text = mapped_column(Text, nullable=False)
     video_id = mapped_column(Integer, ForeignKey('video.id'), nullable=False)
