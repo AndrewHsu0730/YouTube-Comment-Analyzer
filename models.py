@@ -2,7 +2,6 @@ from sqlalchemy import Numeric, ForeignKey, Integer, String, Text, DateTime
 from sqlalchemy.orm import relationship, mapped_column
 from database import db
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash
 from datetime import datetime
 
 class User(db.Model, UserMixin):
@@ -14,7 +13,7 @@ class User(db.Model, UserMixin):
 
     def __init__(self, username, password):
         self.username = username
-        self.password = generate_password_hash(password, method='scrypt')
+        self.password = password
 
 class Video(db.Model):
     __tablename__ = 'video'
@@ -37,7 +36,7 @@ class Video(db.Model):
         self.likes = likes
         self.dislikes = dislikes
         self.word = word
-        self.date = datetime.strptime(date, "%Y-%m-%d")
+        self.date = date
         self.user_id = user_id
 
 class Comment(db.Model):
