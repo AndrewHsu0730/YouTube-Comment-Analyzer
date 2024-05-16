@@ -3,7 +3,6 @@ from flask import Flask
 from database import db
 from pathlib import Path
 from routes import auth_routes_bp, html_routes_bp
-from flask_login import LoginManager
 from models import User
 
 # @pytest.fixture

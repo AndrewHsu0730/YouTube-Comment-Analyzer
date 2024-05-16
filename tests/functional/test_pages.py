@@ -1,4 +1,3 @@
-from conftest import create_app
 from flask_login import LoginManager
 from models import User
 from app import app
@@ -26,3 +25,14 @@ with app.test_client() as test_client:
     def test_redirect():
         response = test_client.get("/views/home")
         assert response.status_code == 302
+
+    # def test_login_logic():
+    #     with app.app_context():
+    #         user = User(username="Aquarium", password="aquarium123")
+    #         db.session.add(user)
+    #         db.session.commit()
+    #         response = test_client.post("/auth/login", data={"username": "Aquarium", "password": "aquarium123"})
+    #         assert b""
+
+    # def test_home_page():
+    #     pass

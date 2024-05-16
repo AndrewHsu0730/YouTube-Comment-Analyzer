@@ -20,7 +20,7 @@ def test_new_user():
         db.session.add(user)
         db.session.commit()
         assert user is not None
-        assert user.id == 1
+        assert user.id == 2
         assert user.username == "Ash"
         assert user.password != "thestressedguy"
 

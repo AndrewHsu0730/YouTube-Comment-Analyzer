@@ -1,8 +1,8 @@
 from sqlalchemy import Numeric, ForeignKey, Integer, String, Text, DateTime
-from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.orm import mapped_column
 from database import db
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 from datetime import datetime
 
 class User(db.Model, UserMixin):
