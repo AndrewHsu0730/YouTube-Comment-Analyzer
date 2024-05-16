@@ -187,7 +187,7 @@ def getStats(date, likes, dislike, view):
     ax2 = ax1.twinx()
     ax2.plot(date, view, color='y', label='Views')
     fig.tight_layout()
-    formatter = ticker.FuncFormatter(lambda x, pos: '{:,.0f}'.format(
+    formatter = ticker.FuncFormatter(lambda x, pos: '{:,.2f}'.format(
         x / 1000) + 'K' if x < 1000000 else '{:,.0f}M'.format(x / 1000000) if x < 1000000000 else '{:,.0f}B'.format(x / 1000000000))
     ax1.yaxis.set_major_formatter(formatter)
     ax2.yaxis.set_major_formatter(formatter)
