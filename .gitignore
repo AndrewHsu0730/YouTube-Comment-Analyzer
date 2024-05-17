@@ -6,3 +6,6 @@
 /static/images/pie_chart.png
 /static/images/stats.png
 /static/images/common_chart.png
+/tests/__pycache__
+/tests/functional/__pycache__
+/tests/unit/__pycache__
