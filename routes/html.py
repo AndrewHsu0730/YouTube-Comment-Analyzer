@@ -56,7 +56,7 @@ def read_url():
         return render_template("/html/dashboard.html", wordcloud =  url_for('static', filename = 'images/error.png') ,title = title)
     return render_template("/html/dashboard.html", wordcloud =  url_for('static', filename = 'images/word_cloud.png') ,title = title, selected_image_url = url_for('static', filename='images/pie_chart.png'))
 
-
+"""
 @html_routes_bp.route("/select" , methods=['GET', 'POST'])
 def select():
     images = [
@@ -74,3 +74,4 @@ def select():
                 break
 
     return render_template('/html/dashboard.html', wordcloud =  url_for('static', filename = 'images/word_cloud.png') ,title = title,selected_image_url=selected_image_url)
+"""
