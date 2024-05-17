@@ -3,6 +3,7 @@ from models import User
 from app import app
 from database import db
 from werkzeug.security import generate_password_hash
+from manage import *
 
 login_manager = LoginManager()
 login_manager.login_view = "authorization.home"
@@ -29,6 +30,8 @@ with app.test_client() as test_client:
 
     def test_login_logic():
         with app.app_context():
+            drop_tables()
+            create_tables()
             user = User(username="user1", password=generate_password_hash("user111", method="scrypt"))
             db.session.add(user)
             db.session.commit()
