@@ -3,7 +3,7 @@
     <link rel="stylesheet" href = "{{ url_for('static', filename='home.css') }}">
 </head>
 <body>
-    <img src="/static/images/sample.png" alt="Hero image" class="hero-image" />
+    <a href="{{ url_for('index')}}"><img src="/static/images/sample.png" alt="Hero image" class="hero-image" /> </a>
 
     <form action="http://localhost:8008/views/dashboard" , method="post">
         <div class="input-container">
