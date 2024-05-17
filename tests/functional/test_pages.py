@@ -49,8 +49,8 @@ with app.test_client() as test_client:
             db.session.add(user)
             db.session.commit()
             response = test_client.post("/auth/login", data={"username": "user3", "password": "user333"}, follow_redirects=True)
-            # response = test_client.post("/views/dashboard", data={"url": "https://www.youtube.com/watch?v=jNQXAC9IVRw", "pages": 1}, follow_redirects=True)
-            # assert b"Dashboard" in response.data
+            response = test_client.post("/views/dashboard", data={"url": "https://www.youtube.com/watch?v=jNQXAC9IVRw", "pages": 1}, follow_redirects=True)
+            assert b"Dashboard" in response.data
 
     def test_other_pages():
         with app.app_context():

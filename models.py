@@ -24,20 +24,20 @@ class Video(db.Model):
     likes = mapped_column(Integer, nullable=False)
     dislikes = mapped_column(Integer, nullable=False)
     word = mapped_column(Text, nullable=False)
-    date = mapped_column(DateTime, nullable=False)
+    date = mapped_column(String(10), nullable=False)
     user_id = mapped_column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship('User', back_populates='videos')
     comments = relationship('Comment', back_populates='video', lazy=True)
 
-    def __init__(self, title, url, views, likes, dislikes, word, date, user_id):
-        self.title = title
-        self.url = url
-        self.views = views
-        self.likes = likes
-        self.dislikes = dislikes
-        self.word = word
-        self.date = date
-        self.user_id = user_id
+    # def __init__(self, title, url, views, likes, dislikes, word, date, user_id):
+    #     self.title = title
+    #     self.url = url
+    #     self.views = views
+    #     self.likes = likes
+    #     self.dislikes = dislikes
+    #     self.word = word
+    #     self.date = date
+    #     self.user_id = user_id
 
 class Comment(db.Model):
     __tablename__ = "comment"
