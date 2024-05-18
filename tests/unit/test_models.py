@@ -3,6 +3,8 @@ from models import User, Video, Comment
 from database import db
 from app import app
 from manage import create_tables, drop_tables
+from werkzeug.security import generate_password_hash
+from datetime import datetime
 
 def test_new_user():
     with app.app_context():
@@ -16,17 +18,17 @@ def test_new_user():
             db.session.add(user)
             db.session.commit()
 
-        user = User(username="Ash", password="thestressedguy")
+        user = User(username="admin", password=generate_password_hash("admin123", method="scrypt"))
         db.session.add(user)
         db.session.commit()
         assert user is not None
-        assert user.id == 1
-        assert user.username == "Ash"
-        assert user.password != "thestressedguy"
+        assert user.id == 5
+        assert user.username == "admin"
+        assert user.password != "admin123"
 
 def test_video():
     with app.app_context():
-        video = Video(title="Title", url="URL", views=1, likes=1, dislikes=1, date="2024-5-15", user_id=1)
+        video = Video(title="Title", url="URL", views=1, likes=1, dislikes=1, word="Word", date=datetime.strptime("2024-5-15", "%Y-%m-%d"), user_id=1)
         db.session.add(video)
         db.session.commit()
         assert video is not None

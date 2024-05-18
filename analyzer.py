@@ -8,6 +8,7 @@ from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from googleapiclient.discovery import build
 from api_key import API_KEY
+import matplotlib.ticker as ticker
 import matplotlib
 matplotlib.use('Agg')
 
@@ -26,16 +27,18 @@ def getStat(vid):
     like_count = request["likes"]
     dislike_count = request["dislikes"]
     view_count = request["viewCount"]
+    print(like_count)
 
     return like_count, dislike_count, view_count
 
 
 def urlToVid(url):
-    if "&" in url:
-        vid = url[(url.index("v=") + 2):url.index("&")]
-    else:
-        vid = url[(url.index("v=") + 2):]
-    return vid
+    if url.startswith("https://www.youtube.com/watch?v="):
+        if "&" in url:
+            vid = url[(url.index("v=") + 2):url.index("&")]
+        else:
+            vid = url[(url.index("v=") + 2):]
+        return vid
 
 
 def processComment(comment):
@@ -47,61 +50,69 @@ def processComment(comment):
     comment = comment.replace("_", " ")
     comment = re.sub(r"\s+", " ", comment)
     comment = comment.strip().lower()
-
     return comment
+
+
+def getTitle(vid):
+    response = youtube.videos().list(
+        part="snippet",
+        id=vid,
+    ).execute()
+    title = response["items"][0]["snippet"]["title"]
+    return title
 
 
 def getComment(vid, pages):
     word_comments = {}
     comments = []
+
     if int(pages) > 2500:
-        raise Exception(
-            "The number of pages to extract can't exceed 2500 due to limit.")
+        print("Exceed Limit")
+        return
+
     n = 0
+    next_page_token = None
 
     while n < int(pages):
         try:
-            response = youtube.commentThreads().list(
-                part="snippet",
-                videoId=vid,
-                maxResults=100,
-                pageToken=response["nextPageToken"]
-            ).execute()
+            if next_page_token:
+                response = youtube.commentThreads().list(
+                    part="snippet",
+                    videoId=vid,
+                    maxResults=100,
+                    pageToken=next_page_token
+                ).execute()
+            else:
+                response = youtube.commentThreads().list(
+                    part="snippet",
+                    videoId=vid,
+                    maxResults=100
+                ).execute()
+            
+            for item in response["items"]:
+                sentence = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
+                sentence = processComment(sentence)
+                if sentence and sentence.strip():
+                    comments.append(sentence)
+                    for word in sentence.split():
+                        if word not in stopwords:
+                            word_comments[word.title()] = word_comments.get(word.title(), 0) + 1
+            
+            next_page_token = response.get("nextPageToken")
+            if not next_page_token:
+                break  
+            
+            n += 1
+        
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            break
 
-            for item in response["items"]:
-                sentence = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
-                sentence = processComment(sentence)
-                if sentence == "" or sentence == " ":
-                    pass
-                else:
-                    comments.append(sentence)
-                    for word in sentence.split():
-                        if word not in stopwords:
-                            word_comments[word] = word_comments.get(
-                                word, 0) + 1
-        except:
-            response = youtube.commentThreads().list(
-                part="snippet",
-                videoId=vid,
-                maxResults=100,
-            ).execute()
-            for item in response["items"]:
-                sentence = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
-                sentence = processComment(sentence)
-                if sentence == "" or sentence == " ":
-                    pass
-                else:
-                    comments.append(sentence)
-                    for word in sentence.split():
-                        if word not in stopwords:
-                            word_comments[word] = word_comments.get(
-                                word, 0) + 1
-        n += 1
     return word_comments, comments
-
 
 def generateWordCloud(comments):
     plt.clf()
+    plt.subplots(figsize=(12, 6))
     word_cloud = WordCloud(font_path='arial',
                            scale=3,
                            collocations=False,
@@ -140,11 +151,68 @@ def getPieChart(sentimentDict):
     return plt
 
 
+def getBarChart(sentimentDict):
+    plt.clf()
+    plt.subplots(figsize=(12, 6))
+    plt.bar(sentimentDict.keys(), sentimentDict.values(), 0.4)
+    plt.title("Number of Comments by Sentiment as a bar chart")
+    return plt
+
+
+def getCommonChart(word_comments):
+    plt.clf()
+    plt.subplots(figsize=(12, 6))
+    res = dict(sorted(word_comments.items(),
+               key=lambda x: x[1], reverse=True)[:5])
+    plt.bar(list(res.keys()), list(res.values()), 0.5)
+    plt.title("Top 5 most used words")
+    return plt
+
+
+def retrieveData(current_uid, url):
+    from models import Video
+    videos_with_same_url = Video.query.filter_by(
+        url=url, user_id=current_uid).all()
+    dates_list = [video.date for video in videos_with_same_url]
+    likes_list = [video.likes for video in videos_with_same_url]
+    dislikes_list = [video.dislikes for video in videos_with_same_url]
+    views_list = [video.views for video in videos_with_same_url]
+    return getStats(dates_list, likes_list, dislikes_list, views_list)
+
+
 def getStats(date, likes, dislike, view):
-    fig, ax1 = plt.subplots()
-    ax1.bar(date, dislike, width=0.4)
-    ax1.bar(date, likes, bottom=dislike, width=0.4)
+    plt.clf()
+    fig, ax1 = plt.subplots(figsize=(12, 6))
+    ax1.bar(date, dislike, width=0.4, label='Dislikes')
+    ax1.bar(date, likes, bottom=dislike, width=0.4, label='Likes')
     ax2 = ax1.twinx()
-    ax2.plot(date, view, color='y')
+    ax2.plot(date, view, color='y', label='Views')
     fig.tight_layout()
-    plt.show()
+    formatter = ticker.FuncFormatter(lambda x, pos: '{:,.0f}'.format(
+        x / 1000) + 'K' if x < 1000000 else '{:,.0f}M'.format(x / 1000000) if x < 1000000000 else '{:,.0f}B'.format(x / 1000000000))
+    ax1.yaxis.set_major_formatter(formatter)
+    ax2.yaxis.set_major_formatter(formatter)
+    ax1.legend(loc='upper left')
+    ax2.legend(loc='upper right')
+    return plt
+
+
+def getAllChart(word_comments, sentimentDict, uid, url):
+    import os
+    
+    wc = generateWordCloud(word_comments)  # Generate word cloud
+    wc.savefig(os.path.join("static", "images", "word_cloud.png")) # Save the word cloud
+    
+    pie_chart = getPieChart(sentimentDict)  # Generate pie chart
+    pie_chart.savefig(os.path.join("static", "images",
+                      "pie_chart.png"))  # Save the pie chart
+    
+    bar_chart = getBarChart(sentimentDict)  # Generate bar chart
+    bar_chart.savefig(os.path.join("static", "images",
+                      "bar_chart.png"))  # Save the bar chart
+
+    common_chart = getCommonChart(word_comments)  # Generate common chart
+    common_chart.savefig(os.path.join("static", "images", "common_chart.png")) # Save the common chart
+    
+    stats = retrieveData(uid, url)
+    stats.savefig(os.path.join("static", "images", "stats.png"))
