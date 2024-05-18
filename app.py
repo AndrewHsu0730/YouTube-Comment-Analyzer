@@ -15,7 +15,8 @@ app.register_blueprint(auth_routes_bp, url_prefix="/")
 app.register_blueprint(html_routes_bp, url_prefix="/views")
 login_manager = LoginManager()
 login_manager.login_view = "authorization.home"
-login_manager.init_app(app) 
+login_manager.init_app(app)
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))

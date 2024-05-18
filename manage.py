@@ -22,7 +22,8 @@ def new_video(user_id,title,url,views,likes,dislikes,word):
     new_video.likes = likes
     new_video.dislikes = dislikes
     new_video.word = word
-    new_video.date = datetime.now().strftime("%Y-%m-%d %H:%M")  
+    new_video.date = datetime.now().strftime("%Y-%m-%d %H:%M")
+    print(new_video.date)
     user = User.query.get(user_id)
     user.videos.append(new_video)
     db.session.commit()
