@@ -27,6 +27,7 @@ def getStat(vid):
     like_count = request["likes"]
     dislike_count = request["dislikes"]
     view_count = request["viewCount"]
+    print(like_count)
 
     return like_count, dislike_count, view_count
 
