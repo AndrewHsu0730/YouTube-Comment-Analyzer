@@ -1,21 +1,18 @@
 from flask import render_template, request, Blueprint, url_for
 from flask_login import login_required, current_user
 from analyzer import *
-from datetime import datetime
-import os
 
 html_routes_bp = Blueprint("html", __name__)
 
 @html_routes_bp.route("/home")
 @login_required
 def home():
-    print(current_user)
     return render_template("/html/home.html", user=current_user)
 
-@html_routes_bp.route("/faq")
+@html_routes_bp.route("/tutorial")
 @login_required
-def faq():
-    return render_template("/html/faq.html")
+def tutorial():
+    return render_template("/html/tutorial.html")
 
 @html_routes_bp.route("/about")
 @login_required
@@ -59,7 +56,7 @@ def read_url():
         return render_template("/html/dashboard.html", wordcloud =  url_for('static', filename = 'images/error.png') ,title = title)
     return render_template("/html/dashboard.html", wordcloud =  url_for('static', filename = 'images/word_cloud.png') ,title = title, selected_image_url = url_for('static', filename='images/pie_chart.png'))
 
-
+"""
 @html_routes_bp.route("/select" , methods=['GET', 'POST'])
 def select():
     images = [
@@ -77,3 +74,4 @@ def select():
                 break
 
     return render_template('/html/dashboard.html', wordcloud =  url_for('static', filename = 'images/word_cloud.png') ,title = title,selected_image_url=selected_image_url)
+"""

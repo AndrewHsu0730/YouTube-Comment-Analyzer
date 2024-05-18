@@ -1,22 +1,38 @@
 {% extends '/html/base.html' %} {% block content %}
-<h1>Analysis Report</h1>
-<h4>Dashboard</h4>
-<p>{{title}}</p>
-<img src="{{wordcloud}}" /><br>
-<img src="{{ url_for('static', filename = 'images/stats.png') }}" /><br>
-
-
-{% if selected_image_url %}
-    <p>Select one option from drop-down list:</p>
-    <form method="post" action="http://localhost:8008/views/select">
-        <select name="image">
-            <option value="pie_chart">Pie Chart for Sentiment Score</option>
-            <option value="bar_chart">Bar Chart for Sentiment Score</option>
-            <option value="common_chart">Top 5 most used words</option>
-        </select><br>
-        <input type="submit" value="Submit">
-    </form>
-    <br>
-    <img src="{{ selected_image_url }}" alt="Selected Image">
-{% endif %}
-{% endblock %}
+<head>
+    <link rel="stylesheet" href = "{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<main>
+    <h1 class="dashboard-header">Dashboard</h1>
+    <div class="dashboard-flex">
+      <div class="word-cloud-column">
+        <section class="word-cloud-wrapper">
+          <h2 class="word-cloud-title">WordCloud</h2>
+          <img loading="lazy" src="{{ url_for('static', filename='images/word_cloud.png') }}" class="img-2" alt="WordCloud Visualization" />
+        </section>
+      </div>
+      <div class="top-words-column">
+        <section class="top-words-wrapper">
+          <h2 class="top-words-title">Top 5 Used Words</h2>
+          <img loading="lazy" src="{{ url_for('static', filename='images/common_chart.png') }}" class="img-3" alt="Top 5 Used Words Visualization" />
+        </section>
+      </div>
+    </div>
+    <div class="chart-flex">
+      <div class="chart-columns">
+        <div class="sentiment-column">
+          <section class="sentiment-wrapper">
+            <h2 class="sentiment-title">Pie Chart of Sentiments</h2>
+            <img loading="lazy" src="{{ url_for('static', filename='images/pie_chart.png') }}" class="img-4" alt="Pie Chart of Sentiments Visualization" />
+          </section>
+        </div>
+        <div class="statistic-column">
+          <section class="statistic-wrapper">
+            <h2 class="statistic-title">Statistic Chart</h2>
+            <img loading="lazy" src="{{ url_for('static', filename='images/stats.png') }}" class="img-5" alt="Statistic Chart Visualization" />
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}
