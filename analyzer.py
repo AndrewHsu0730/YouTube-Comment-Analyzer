@@ -27,7 +27,6 @@ def getStat(vid):
     like_count = request["likes"]
     dislike_count = request["dislikes"]
     view_count = request["viewCount"]
-    print(like_count)
 
     return like_count, dislike_count, view_count
 
@@ -110,6 +109,7 @@ def getComment(vid, pages):
 
     return word_comments, comments
 
+
 def generateWordCloud(comments):
     plt.clf()
     plt.subplots(figsize=(12, 6))
@@ -127,12 +127,17 @@ def generateWordCloud(comments):
 
 def calculateScore(comments):
     scores = list(map(analyzer.polarity_scores, comments))
+    sum = 0
+    for score in scores:
+        sum += score["compound"]
+    avg_score = sum / len(scores)
+    print(avg_score)
     sentiment = list(
         map(lambda score: identifySentiment(score["compound"]), scores))
     sentimentDict = {"Postive": sentiment.count("Positive"),
                      "Negative": sentiment.count("Negative"),
                      "Neutral": sentiment.count("Neutral")}
-    return sentimentDict
+    return sentimentDict, avg_score
 
 
 def identifySentiment(score):
@@ -177,6 +182,7 @@ def retrieveData(current_uid, url):
     likes_list = [video.likes for video in videos_with_same_url]
     dislikes_list = [video.dislikes for video in videos_with_same_url]
     views_list = [video.views for video in videos_with_same_url]
+    scores_list = [video.score for video in videos_with_same_url]
     return getStats(dates_list, likes_list, dislikes_list, views_list)
 
 
