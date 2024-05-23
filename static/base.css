@@ -1,69 +1,71 @@
 body {
-    padding: 0px;
-    margin: 0px;
-    width: auto;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    font-size: 1rem;
+    background-color: #fff;
 }
 
 .container {
-    background-color: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 80px;
-    font-size: 20px;
+    padding-bottom: 5rem; /* Using rem for relative sizing */
+    font-size: 1.25rem; /* Slightly larger default font size */
     font-weight: 500;
-    line-height: 150%;
+    line-height: 1.5; /* Using relative line-height */
 }
 
 .header {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    align-items: center; /* Align items to center vertically */
+    gap: 1.25rem; /* Using rem for gaps */
     color: #000;
-    height: 150px;
+    height: 9.375rem; /* Using rem for height */
+    padding: 0 1.25rem; /* Add padding to the header */
 }
 
 @media (max-width: 991px) {
     .header {
         flex-wrap: wrap;
-        padding: 0 20px;
-        max-width: 100%;
+        padding: 0 1.25rem; /* Using rem for padding */
     }
 }
 
 .logo-container {
     display: flex;
-    gap: 3px;
+    gap: 0.188rem; /* Using rem for gaps */
     white-space: nowrap;
-    margin-left: 20px;
+    align-items: center; /* Align items to center vertically */
 }
 
 @media (max-width: 991px) {
     .logo-container {
-        white-space: initial;
+        white-space: normal;
     }
 }
 
 .logo-text {
     font-family: Inter, sans-serif;
     margin: auto 0;
-    flex-grow: 1;
 }
 
 .logo-image {
+    max-width: 12%; /* Ensure the image does not exceed the container */
+    height: auto; /* Maintain aspect ratio */
     aspect-ratio: 1.03;
-    object-fit: auto;
+    object-fit: contain; /* 'contain' is better for responsiveness */
     object-position: center;
 }
 
 .nav-menu {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
-    gap: 20px;
-    margin: auto 0;
-    margin-right: 20px;
+    gap: 1.25rem; /* Using rem for gaps */
+    width: 100%;
 }
 
 @media (max-width: 991px) {
@@ -79,30 +81,24 @@ body {
 }
 
 .login-button {
-    font: 16px Inter, sans-serif;
+    font: 1rem Inter, sans-serif;
     color: #fff;
     background-color: #000;
-    border-radius: 8px;
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-    padding: 14px 24px;
+    border-radius: 0.5rem; /* Using rem for border radius */
+    box-shadow: 0 0.063rem 0.125rem rgba(0, 0, 0, 0.05); /* Using rem for shadow */
+    padding: 0.875rem 1.5rem; /* Using rem for padding */
     justify-content: center;
     align-self: stretch;
 }
 
-.login-button:link {
-    text-decoration: none;
-    color: white;
-}
+.login-button:link,
 .login-button:visited {
     text-decoration: none;
     color: white;
 }
 
-a:link {
-  text-decoration: none;
-  color: black;
-}
+a:link,
 a:visited {
-  text-decoration: none;
-  color: black;
+    text-decoration: none;
+    color: black;
 }
