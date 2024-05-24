@@ -18,7 +18,7 @@ def test_new_user():
             db.session.add(user)
             db.session.commit()
 
-        user = User(username="admin", password=generate_password_hash("admin123", method="sha512"))
+        user = User(username="admin", password=generate_password_hash("admin123", method="scrypt"))
         db.session.add(user)
         db.session.commit()
         assert user is not None
