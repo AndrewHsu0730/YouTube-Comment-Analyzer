@@ -111,6 +111,7 @@ def getComment(vid, pages):
 
 def generateWordCloud(comments):
     plt.clf()
+
     plt.subplots(figsize=(5, 5))
     try:
         word_cloud = WordCloud(font_path='arial',
@@ -125,6 +126,7 @@ def generateWordCloud(comments):
                             background_color="white",
                             mask=np.array(Image.open('youtube_icon.png')),
                             colormap="Reds_r").generate_from_frequencies(comments)
+        
     plt.imshow(word_cloud)
     plt.axis('off')
     return plt

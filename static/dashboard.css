@@ -234,3 +234,11 @@ main {
       max-width: 100%;
     }
   }
+
+  .dark-mode h1 {
+    color:white;
+  }
+
+  .dark-mode h2 {
+    color: white;
+  }

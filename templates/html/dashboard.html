@@ -35,4 +35,11 @@
       </div>
     </div>
   </main>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+              if (localStorage.getItem("darkMode") === "enabled") {
+                document.querySelector('body').classList.add("dark-mode");
+              }
+            });
+  </script>
   {% endblock %}
