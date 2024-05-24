@@ -49,8 +49,8 @@ def read_url():
     word_comments,comments = getComment(vid, pages) # Process comments
     if  word_comments or comments:
         most_occured_word = max(word_comments, key=word_comments.get) #Get mosr common word in 
-        new_video(current_user.id,getTitle(vid),url,view_count,like_count,dislike_count,most_occured_word)
-        sentimentDict = calculateScore(comments)
+        sentimentDict, avg_score = calculateScore(comments)
+        new_video(current_user.id,getTitle(vid),url,view_count,like_count,dislike_count,avg_score,most_occured_word)
         getAllChart(word_comments,sentimentDict,current_user.id,url)
     else:
         return render_template("/html/dashboard.html", wordcloud =  url_for('static', filename = 'images/error.png') ,title = title)
