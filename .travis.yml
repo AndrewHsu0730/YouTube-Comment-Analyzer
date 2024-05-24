@@ -1,6 +1,9 @@
 language: python
 python:
 - "3.9"
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install openssl
 install: "pip install -r requirements.txt"
 script:
 - python -m pytest
