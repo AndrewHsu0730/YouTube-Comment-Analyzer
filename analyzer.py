@@ -109,45 +109,29 @@ def getComment(vid, pages):
 
     return word_comments, comments
 
-
 def generateWordCloud(comments):
     plt.clf()
     plt.subplots(figsize=(12, 6))
-    try:
-        word_cloud = WordCloud(font_path='arial',
-                            scale=3,
-                            collocations=False,
-                            background_color="white",
-                            mask=np.array(Image.open('youtube_icon.png')),
-                            colormap="Reds_r").generate_from_frequencies(comments)
-        plt.imshow(word_cloud)
-        plt.axis('off')
-        plt.title("Common Words")
-    except:
-        word_cloud = WordCloud(scale=3,
-                            collocations=False,
-                            background_color="white",
-                            mask=np.array(Image.open('youtube_icon.png')),
-                            colormap="Reds_r").generate_from_frequencies(comments)
-        plt.imshow(word_cloud)
-        plt.axis('off')
-        plt.title("Common Words")
+    word_cloud = WordCloud(font_path='arial',
+                           scale=3,
+                           collocations=False,
+                           background_color="white",
+                           mask=np.array(Image.open('youtube_icon.png')),
+                           colormap="Reds_r").generate_from_frequencies(comments)
+    plt.imshow(word_cloud)
+    plt.axis('off')
+    plt.title("Common Words")
     return plt
 
 
 def calculateScore(comments):
     scores = list(map(analyzer.polarity_scores, comments))
-    sum = 0
-    for score in scores:
-        sum += score["compound"]
-    avg_score = sum / len(scores)
-    print(avg_score)
     sentiment = list(
         map(lambda score: identifySentiment(score["compound"]), scores))
     sentimentDict = {"Postive": sentiment.count("Positive"),
                      "Negative": sentiment.count("Negative"),
                      "Neutral": sentiment.count("Neutral")}
-    return sentimentDict, avg_score
+    return sentimentDict
 
 
 def identifySentiment(score):
@@ -158,51 +142,15 @@ def identifySentiment(score):
     else:
         return "Neutral"
 
-
-
 def getPieChart(sentimentDict):
     total_comments = sum(sentimentDict.values())
-    
     sentiment_percentages = {k: (v / total_comments) * 100 for k, v in sentimentDict.items()}
-    
     # Plot the pie chart
     plt.clf()
     plt.subplots(figsize=(8, 8))
     plt.pie(sentiment_percentages.values(), labels=sentiment_percentages.keys(), autopct='%1.1f%%', startangle=140)
     plt.title("Percentage of Comments by Sentiment")
-    
     return plt
-
-
-def getBarChart(sentimentDict):
-    plt.clf()
-    plt.subplots(figsize=(12, 6))
-    plt.bar(sentimentDict.keys(), sentimentDict.values(), 0.4)
-    plt.title("Number of Comments by Sentiment as a bar chart")
-    return plt
-
-
-def getCommonChart(word_comments):
-    plt.clf()
-    plt.subplots(figsize=(12, 6))
-    res = dict(sorted(word_comments.items(),
-               key=lambda x: x[1], reverse=True)[:5])
-    plt.bar(list(res.keys()), list(res.values()), 0.5)
-    plt.title("Top 5 most used words")
-    return plt
-
-
-def retrieveData(current_uid, url):
-    from models import Video
-    videos_with_same_url = Video.query.filter_by(
-        url=url, user_id=current_uid).all()
-    dates_list = [video.date for video in videos_with_same_url]
-    likes_list = [video.likes for video in videos_with_same_url]
-    dislikes_list = [video.dislikes for video in videos_with_same_url]
-    views_list = [video.views for video in videos_with_same_url]
-    scores_list = [video.score for video in videos_with_same_url]
-    return getStats(dates_list, likes_list, dislikes_list, views_list)
-
 
 def getStats(date, likes, dislike, view):
     plt.clf()
@@ -220,6 +168,31 @@ def getStats(date, likes, dislike, view):
     ax2.legend(loc='upper right')
     return plt
 
+def getCommonChart(word_comments):
+    plt.clf()
+    plt.subplots(figsize=(12, 6))
+    res = dict(sorted(word_comments.items(),
+               key=lambda x: x[1], reverse=True)[:5])
+    plt.bar(list(res.keys()), list(res.values()), 0.5)
+    plt.title("Top 5 most used words")
+    return plt
+
+def getBarChart(sentimentDict):
+    plt.clf()
+    plt.subplots(figsize=(12, 6))
+    plt.bar(sentimentDict.keys(), sentimentDict.values(), 0.4)
+    plt.title("Number of Comments by Sentiment as a bar chart")
+    return plt
+
+def retrieveData(current_uid, url):
+    from models import Video
+    videos_with_same_url = Video.query.filter_by(
+        url=url, user_id=current_uid).all()
+    dates_list = [video.date for video in videos_with_same_url]
+    likes_list = [video.likes for video in videos_with_same_url]
+    dislikes_list = [video.dislikes for video in videos_with_same_url]
+    views_list = [video.views for video in videos_with_same_url]
+    return getStats(dates_list, likes_list, dislikes_list, views_list)
 
 def getAllChart(word_comments, sentimentDict, uid, url):
     import os
