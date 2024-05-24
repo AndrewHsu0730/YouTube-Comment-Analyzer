@@ -146,10 +146,8 @@ def identifySentiment(score):
 
 
 def getPieChart(sentimentDict):
-    # Calculate total number of comments
     total_comments = sum(sentimentDict.values())
     
-    # Convert counts to percentages
     sentiment_percentages = {k: (v / total_comments) * 100 for k, v in sentimentDict.items()}
     
     # Plot the pie chart
@@ -217,9 +215,8 @@ def getAllChart(word_comments, sentimentDict, uid, url):
     pie_chart.savefig(os.path.join("static", "images",
                       "pie_chart.png"))  # Save the pie chart
     
-    bar_chart = getBarChart(sentimentDict)  # Generate bar chart
-    bar_chart.savefig(os.path.join("static", "images",
-                      "bar_chart.png"))  # Save the bar chart
+    #bar_chart = getBarChart(sentimentDict)  # Generate bar chart
+    #bar_chart.savefig(os.path.join("static", "images","bar_chart.png"))  # Save the bar chart
 
     common_chart = getCommonChart(word_comments)  # Generate common chart
     common_chart.savefig(os.path.join("static", "images", "common_chart.png")) # Save the common chart
