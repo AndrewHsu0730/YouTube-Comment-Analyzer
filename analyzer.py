@@ -111,7 +111,7 @@ def getComment(vid, pages):
 
 def generateWordCloud(comments):
     plt.clf()
-    plt.subplots(figsize=(12, 6))
+    plt.subplots(figsize=(5, 5))
     word_cloud = WordCloud(font_path='arial',
                            scale=3,
                            collocations=False,
@@ -120,18 +120,22 @@ def generateWordCloud(comments):
                            colormap="Reds_r").generate_from_frequencies(comments)
     plt.imshow(word_cloud)
     plt.axis('off')
-    plt.title("Common Words")
     return plt
 
 
 def calculateScore(comments):
     scores = list(map(analyzer.polarity_scores, comments))
+    sum_ = 0
+    for score in scores:
+        sum_ += score["compound"]
+    avg_score = sum_ / len(scores)
+    print(avg_score)
     sentiment = list(
         map(lambda score: identifySentiment(score["compound"]), scores))
     sentimentDict = {"Postive": sentiment.count("Positive"),
                      "Negative": sentiment.count("Negative"),
                      "Neutral": sentiment.count("Neutral")}
-    return sentimentDict
+    return sentimentDict, avg_score
 
 
 def identifySentiment(score):
@@ -145,43 +149,83 @@ def identifySentiment(score):
 def getPieChart(sentimentDict):
     total_comments = sum(sentimentDict.values())
     sentiment_percentages = {k: (v / total_comments) * 100 for k, v in sentimentDict.items()}
+    
     # Plot the pie chart
     plt.clf()
-    plt.subplots(figsize=(8, 8))
-    plt.pie(sentiment_percentages.values(), labels=sentiment_percentages.keys(), autopct='%1.1f%%', startangle=140)
-    plt.title("Percentage of Comments by Sentiment")
+    plt.subplots(figsize=(5, 5))
+    wedges, texts, autotexts = plt.pie(sentiment_percentages.values(), 
+                                       labels=sentiment_percentages.keys(), 
+                                       autopct='%1.1f%%', 
+                                       startangle=140, 
+                                       textprops=dict(color="white", weight='bold'))
+    
+    # Change the color and weight of the labels
+    for text in texts:
+        text.set_color('white')
+        text.set_weight('bold')
     return plt
 
-def getStats(date, likes, dislike, view):
+def getStats(date, likes, dislikes, views):
     plt.clf()
-    fig, ax1 = plt.subplots(figsize=(12, 6))
-    ax1.bar(date, dislike, width=0.4, label='Dislikes',color = "red")
-    ax1.bar(date, likes, bottom=dislike, width=0.4, label='Likes',color = "green")
+    fig, ax1 = plt.subplots(figsize=(5, 5))
+
+    # Plot dislikes bar in red
+    bars_dislikes = ax1.bar(date, dislikes, width=0.4, label='Dislikes', color='red')
+    
+    # Plot likes bar in green, stacked on top of dislikes
+    bars_likes = ax1.bar(date, likes, bottom=dislikes, width=0.4, label='Likes', color='green')
+    
+    # Plot views on a secondary y-axis
     ax2 = ax1.twinx()
-    ax2.plot(date, view, color='y', label='Views',color = "blue")
+    line_views, = ax2.plot(date, views, label='Views', color='blue', marker='o')
+    
+    # Improve layout
     fig.tight_layout()
-    formatter = ticker.FuncFormatter(lambda x, pos: '{:,.1f}'.format(
-        x / 1000) + 'K' if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000))
-    ax1.yaxis.set_major_formatter(formatter)
-    ax2.yaxis.set_major_formatter(formatter)
+    
+    # Annotate the bars with the actual numbers
+    for bar_likes, bar_dislikes in zip(bars_likes, bars_dislikes):
+        # Likes
+        height_likes = bar_likes.get_height() + bar_likes.get_y()
+        ax1.annotate(f'{int(bar_likes.get_height())}',
+                     xy=(bar_likes.get_x() + bar_likes.get_width() / 2, height_likes - bar_likes.get_height() / 2),
+                     xytext=(0, 3), textcoords="offset points", ha='center', va='top', color='white', weight='bold')
+        
+        # Dislikes
+        height_dislikes = bar_dislikes.get_height()
+        ax1.annotate(f'{int(bar_dislikes.get_height())}',
+                     xy=(bar_dislikes.get_x() + bar_dislikes.get_width() / 2, height_dislikes / 2),
+                     xytext=(0, 3), textcoords="offset points", ha='center', va='center', color='white', weight='bold')
+    
+    # Annotate the views on the line plot
+    for i, (x, y) in enumerate(zip(date, views)):
+        ax2.annotate(f'{y:,}', xy=(x, y), xytext=(0, 10), textcoords='offset points', ha='center', va='bottom', color='blue', weight='bold')
+
+    # Define custom formatter for y-axis to format numbers
+    number_formatter = ticker.FuncFormatter(lambda x, pos: '{:,.1f}K'.format(x / 1000) if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000))
+    ax1.yaxis.set_major_formatter(number_formatter)
+    
+    # Define custom formatter for secondary y-axis to format views
+    views_formatter = ticker.FuncFormatter(lambda x, pos: '{:,.1f}K'.format(x / 1000) if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000))
+    ax2.yaxis.set_major_formatter(views_formatter)
+    
+    # Add legends
     ax1.legend(loc='upper left')
     ax2.legend(loc='upper right')
+    
     return plt
 
 def getCommonChart(word_comments):
     plt.clf()
-    plt.subplots(figsize=(12, 6))
+    plt.subplots(figsize=(5, 5))
     res = dict(sorted(word_comments.items(),
                key=lambda x: x[1], reverse=True)[:5])
     plt.bar(list(res.keys()), list(res.values()), 0.5)
-    plt.title("Top 5 most used words")
     return plt
 
 def getBarChart(sentimentDict):
     plt.clf()
-    plt.subplots(figsize=(12, 6))
+    plt.subplots(figsize=(9, 9))
     plt.bar(sentimentDict.keys(), sentimentDict.values(), 0.4)
-    plt.title("Number of Comments by Sentiment as a bar chart")
     return plt
 
 def retrieveData(current_uid, url):
