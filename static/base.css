@@ -7,8 +7,9 @@ body {
 .header {
     display: flex;
     justify-content: space-between;
-    color: #000;
+    color: #e9e9e9;
     height: 80px;
+    background-color: rgb(255, 238, 0);
 }
 
 @media (max-width: 991px) {
@@ -60,17 +61,17 @@ ul li{
     position:relative;
 }
 
-ul li:not(:nth-last-child(-n+2))::after{
+ul li:not(:nth-last-child(-n+4))::after{
     content:""; 
-    border:1px solid #a9a6a6;
-    border-width: 1px 1.5px 0 0;
+    border:1px solid #5e5e5e;
+    border-width: 1.2px 1px 0 0;
     position:absolute; 
-    right:-2px; 
+    right:-1px; 
     top:0; 
     height:100%;
 }
 
-#right-item{
+.dark-mode-button, #right-item{
     float: right;
 }
 
@@ -100,4 +101,28 @@ a:link {
 a:visited {
   text-decoration: none;
   color: black;
+}
+
+.moon-logo {
+    height: 40px;
+    width: 40px;
+    color: rgb(45, 45, 48);
+}
+
+.dark-mode-button {
+    border-radius: 20px;
+    margin-top: -14px;
+}
+
+.dark-mode {
+    background-color: #2d2d30;
+}
+
+.dark-mode .logo-text a{
+    color: white;
+}
+
+.dark-mode .nav-menu .nav-item
+{
+    color: white;
 }
