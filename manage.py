@@ -14,16 +14,16 @@ def drop_tables():
         db.drop_all()
 
 # Insert New Record to Video
-def new_video(user_id,title,url,views,likes,dislikes,word):
+def new_video(user_id,title,url,views,likes,dislikes,score,word):
     new_video = Video()
     new_video.title = title
     new_video.url = url
     new_video.views = views
     new_video.likes = likes
     new_video.dislikes = dislikes
+    new_video.score = score
     new_video.word = word
     new_video.date = datetime.now().strftime("%Y-%m-%d %H:%M")
-    print(new_video.date)
     user = User.query.get(user_id)
     user.videos.append(new_video)
     db.session.commit()
