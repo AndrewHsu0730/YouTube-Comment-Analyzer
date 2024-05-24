@@ -159,10 +159,18 @@ def identifySentiment(score):
         return "Neutral"
 
 
+
 def getPieChart(sentimentDict):
+    total_comments = sum(sentimentDict.values())
+    
+    sentiment_percentages = {k: (v / total_comments) * 100 for k, v in sentimentDict.items()}
+    
+    # Plot the pie chart
     plt.clf()
-    plt.pie(sentimentDict.values(), labels=sentimentDict.keys())
-    plt.title("Number of Comments by Sentiment")
+    plt.subplots(figsize=(8, 8))
+    plt.pie(sentiment_percentages.values(), labels=sentiment_percentages.keys(), autopct='%1.1f%%', startangle=140)
+    plt.title("Percentage of Comments by Sentiment")
+    
     return plt
 
 
@@ -199,10 +207,10 @@ def retrieveData(current_uid, url):
 def getStats(date, likes, dislike, view):
     plt.clf()
     fig, ax1 = plt.subplots(figsize=(12, 6))
-    ax1.bar(date, dislike, width=0.4, label='Dislikes')
-    ax1.bar(date, likes, bottom=dislike, width=0.4, label='Likes')
+    ax1.bar(date, dislike, width=0.4, label='Dislikes',color = "red")
+    ax1.bar(date, likes, bottom=dislike, width=0.4, label='Likes',color = "green")
     ax2 = ax1.twinx()
-    ax2.plot(date, view, color='y', label='Views')
+    ax2.plot(date, view, color='y', label='Views',color = "blue")
     fig.tight_layout()
     formatter = ticker.FuncFormatter(lambda x, pos: '{:,.1f}'.format(
         x / 1000) + 'K' if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000))
@@ -223,9 +231,8 @@ def getAllChart(word_comments, sentimentDict, uid, url):
     pie_chart.savefig(os.path.join("static", "images",
                       "pie_chart.png"))  # Save the pie chart
     
-    bar_chart = getBarChart(sentimentDict)  # Generate bar chart
-    bar_chart.savefig(os.path.join("static", "images",
-                      "bar_chart.png"))  # Save the bar chart
+    #bar_chart = getBarChart(sentimentDict)  # Generate bar chart
+    #bar_chart.savefig(os.path.join("static", "images","bar_chart.png"))  # Save the bar chart
 
     common_chart = getCommonChart(word_comments)  # Generate common chart
     common_chart.savefig(os.path.join("static", "images", "common_chart.png")) # Save the common chart
