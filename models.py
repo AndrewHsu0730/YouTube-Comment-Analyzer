@@ -24,6 +24,7 @@ class Video(db.Model):
     views = mapped_column(Integer, nullable=False)
     likes = mapped_column(Integer, nullable=False)
     dislikes = mapped_column(Integer, nullable=False)
+    score = mapped_column(Numeric, nullable=False)
     word = mapped_column(Text, nullable=False)
     date = mapped_column(String(10), nullable=False)
     user_id = mapped_column(Integer, ForeignKey('user.id'), nullable=False)

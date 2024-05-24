@@ -18,7 +18,7 @@ def test_new_user():
             db.session.add(user)
             db.session.commit()
 
-        user = User(username="admin", password=generate_password_hash("admin123", method="scrypt"))
+        user = User(username="admin", password=generate_password_hash("admin123", method="pbkdf2"))
         db.session.add(user)
         db.session.commit()
         assert user is not None
@@ -28,7 +28,7 @@ def test_new_user():
 
 def test_video():
     with app.app_context():
-        video = Video(title="Title", url="URL", views=1, likes=1, dislikes=1, word="Word", date=datetime.strptime("2024-5-15", "%Y-%m-%d"), user_id=1)
+        video = Video(title="Title", url="URL", views=1, likes=1, dislikes=1, score=0.18, word="Word", date=datetime.strptime("2024-5-15", "%Y-%m-%d"), user_id=1)
         db.session.add(video)
         db.session.commit()
         assert video is not None

@@ -8,13 +8,13 @@
       <div class="word-cloud-column">
         <section class="word-cloud-wrapper">
           <h2 class="word-cloud-title">WordCloud</h2>
-          <img loading="lazy" src="{{ url_for('static', filename='images/word_cloud.png') }}" class="img-2" alt="WordCloud Visualization" />
+          <img loading="lazy" src="{% if not error %}{{ url_for('static', filename='images/word_cloud.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="img-2" alt="WordCloud Visualization" />
         </section>
       </div>
       <div class="top-words-column">
         <section class="top-words-wrapper">
           <h2 class="top-words-title">Top 5 Used Words</h2>
-          <img loading="lazy" src="{{ url_for('static', filename='images/common_chart.png') }}" class="img-3" alt="Top 5 Used Words Visualization" />
+          <img loading="lazy" src="{% if not error %}{{ url_for('static', filename='images/common_chart.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="img-3" alt="Top 5 Used Words Visualization" />
         </section>
       </div>
     </div>
@@ -23,7 +23,7 @@
         <div class="sentiment-column">
           <section class="sentiment-wrapper">
             <h2 class="sentiment-title">Pie Chart of Sentiments</h2>
-            <img loading="lazy" src="{{ url_for('static', filename='images/pie_chart.png') }}" class="img-4" alt="Pie Chart of Sentiments Visualization" />
+            <img loading="lazy" src="{% if not error %}{{ url_for('static', filename='images/pie_chart.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="img-4" alt="Pie Chart of Sentiments Visualization" />
           </section>
         </div>
         <div class="statistic-column">

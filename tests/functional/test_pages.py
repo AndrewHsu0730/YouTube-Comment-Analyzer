@@ -32,7 +32,7 @@ with app.test_client() as test_client:
         with app.app_context():
             drop_tables()
             create_tables()
-            user = User(username="user1", password=generate_password_hash("user111", method="scrypt"))
+            user = User(username="user1", password=generate_password_hash("user111", method="pbkdf2"))
             db.session.add(user)
             db.session.commit()
             response = test_client.post("/auth/login", data={"username": "user1", "password": "user111"}, follow_redirects=True)
@@ -40,7 +40,7 @@ with app.test_client() as test_client:
 
     def test_home_page():
         with app.app_context():
-            user = User(username="user2", password=generate_password_hash("user222", method="scrypt"))
+            user = User(username="user2", password=generate_password_hash("user222", method="pbkdf2"))
             db.session.add(user)
             db.session.commit()
             response = test_client.post("/auth/login", data={"username": "user2", "password": "user222"}, follow_redirects=True)
@@ -48,7 +48,7 @@ with app.test_client() as test_client:
 
     def test_dashboard():
         with app.app_context():
-            user = User(username="user3", password=generate_password_hash("user333", method="scrypt"))
+            user = User(username="user3", password=generate_password_hash("user333", method="pbkdf2"))
             db.session.add(user)
             db.session.commit()
             response = test_client.post("/auth/login", data={"username": "user3", "password": "user333"}, follow_redirects=True)
@@ -57,7 +57,7 @@ with app.test_client() as test_client:
 
     def test_other_pages():
         with app.app_context():
-            user = User(username="user4", password=generate_password_hash("user444", method="scrypt"))
+            user = User(username="user4", password=generate_password_hash("user444", method="pbkdf2"))
             db.session.add(user)
             db.session.commit()
             response = test_client.post("/auth/login", data={"username": "user4", "password": "user444"}, follow_redirects=True)
