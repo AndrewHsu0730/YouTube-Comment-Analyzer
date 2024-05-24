@@ -113,15 +113,25 @@ def getComment(vid, pages):
 def generateWordCloud(comments):
     plt.clf()
     plt.subplots(figsize=(12, 6))
-    word_cloud = WordCloud(font_path='arial',
-                           scale=3,
-                           collocations=False,
-                           background_color="white",
-                           mask=np.array(Image.open('youtube_icon.png')),
-                           colormap="Reds_r").generate_from_frequencies(comments)
-    plt.imshow(word_cloud)
-    plt.axis('off')
-    plt.title("Common Words")
+    try:
+        word_cloud = WordCloud(font_path='arial',
+                            scale=3,
+                            collocations=False,
+                            background_color="white",
+                            mask=np.array(Image.open('youtube_icon.png')),
+                            colormap="Reds_r").generate_from_frequencies(comments)
+        plt.imshow(word_cloud)
+        plt.axis('off')
+        plt.title("Common Words")
+    except:
+        word_cloud = WordCloud(scale=3,
+                            collocations=False,
+                            background_color="white",
+                            mask=np.array(Image.open('youtube_icon.png')),
+                            colormap="Reds_r").generate_from_frequencies(comments)
+        plt.imshow(word_cloud)
+        plt.axis('off')
+        plt.title("Common Words")
     return plt
 
 
