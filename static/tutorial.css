@@ -54,3 +54,11 @@
     font-family: Inter, sans-serif;
     margin-top: 24px;
 }
+
+.dark-mode h2{
+    color:white;
+}
+
+.dark-mode .step-text {
+    color: white;
+}
