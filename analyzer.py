@@ -113,7 +113,7 @@ def getComment(vid, pages):
 def generateWordCloud(comments):
     plt.clf()
     plt.subplots(figsize=(12, 6))
-    word_cloud = WordCloud(font_path='arial',
+    word_cloud = WordCloud(
                            scale=3,
                            collocations=False,
                            background_color="white",
