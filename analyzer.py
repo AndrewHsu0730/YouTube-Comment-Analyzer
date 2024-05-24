@@ -204,8 +204,6 @@ def getAllChart(word_comments, sentimentDict, uid, url):
     pie_chart.savefig(os.path.join("static", "images",
                       "pie_chart.png"))  # Save the pie chart
     
-    #bar_chart = getBarChart(sentimentDict)  # Generate bar chart
-    #bar_chart.savefig(os.path.join("static", "images","bar_chart.png"))  # Save the bar chart
 
     common_chart = getCommonChart(word_comments)  # Generate common chart
     common_chart.savefig(os.path.join("static", "images", "common_chart.png")) # Save the common chart
