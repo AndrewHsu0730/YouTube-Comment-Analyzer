@@ -1,8 +1,8 @@
 language: python
 python:
 - "3.9"
+before_script:
+  - python -m nltk.downloader stopwords
 install: "pip install -r requirements.txt"
 script:
-- import nltk
-- nltk.download('stopwords')
 - python -m pytest
