@@ -109,45 +109,29 @@ def getComment(vid, pages):
 
     return word_comments, comments
 
-
 def generateWordCloud(comments):
     plt.clf()
     plt.subplots(figsize=(12, 6))
-    try:
-        word_cloud = WordCloud(font_path='arial',
-                            scale=3,
-                            collocations=False,
-                            background_color="white",
-                            mask=np.array(Image.open('youtube_icon.png')),
-                            colormap="Reds_r").generate_from_frequencies(comments)
-        plt.imshow(word_cloud)
-        plt.axis('off')
-        plt.title("Common Words")
-    except:
-        word_cloud = WordCloud(scale=3,
-                            collocations=False,
-                            background_color="white",
-                            mask=np.array(Image.open('youtube_icon.png')),
-                            colormap="Reds_r").generate_from_frequencies(comments)
-        plt.imshow(word_cloud)
-        plt.axis('off')
-        plt.title("Common Words")
+    word_cloud = WordCloud(font_path='arial',
+                           scale=3,
+                           collocations=False,
+                           background_color="white",
+                           mask=np.array(Image.open('youtube_icon.png')),
+                           colormap="Reds_r").generate_from_frequencies(comments)
+    plt.imshow(word_cloud)
+    plt.axis('off')
+    plt.title("Common Words")
     return plt
 
 
 def calculateScore(comments):
     scores = list(map(analyzer.polarity_scores, comments))
-    sum = 0
-    for score in scores:
-        sum += score["compound"]
-    avg_score = sum / len(scores)
-    print(avg_score)
     sentiment = list(
         map(lambda score: identifySentiment(score["compound"]), scores))
     sentimentDict = {"Postive": sentiment.count("Positive"),
                      "Negative": sentiment.count("Negative"),
                      "Neutral": sentiment.count("Neutral")}
-    return sentimentDict, avg_score
+    return sentimentDict
 
 
 def identifySentiment(score):
@@ -158,21 +142,31 @@ def identifySentiment(score):
     else:
         return "Neutral"
 
-
 def getPieChart(sentimentDict):
+    total_comments = sum(sentimentDict.values())
+    sentiment_percentages = {k: (v / total_comments) * 100 for k, v in sentimentDict.items()}
+    # Plot the pie chart
     plt.clf()
-    plt.pie(sentimentDict.values(), labels=sentimentDict.keys())
-    plt.title("Number of Comments by Sentiment")
+    plt.subplots(figsize=(8, 8))
+    plt.pie(sentiment_percentages.values(), labels=sentiment_percentages.keys(), autopct='%1.1f%%', startangle=140)
+    plt.title("Percentage of Comments by Sentiment")
     return plt
 
-
-def getBarChart(sentimentDict):
+def getStats(date, likes, dislike, view):
     plt.clf()
-    plt.subplots(figsize=(12, 6))
-    plt.bar(sentimentDict.keys(), sentimentDict.values(), 0.4)
-    plt.title("Number of Comments by Sentiment as a bar chart")
+    fig, ax1 = plt.subplots(figsize=(12, 6))
+    ax1.bar(date, dislike, width=0.4, label='Dislikes',color = "red")
+    ax1.bar(date, likes, bottom=dislike, width=0.4, label='Likes',color = "green")
+    ax2 = ax1.twinx()
+    ax2.plot(date, view, color='y', label='Views',color = "blue")
+    fig.tight_layout()
+    formatter = ticker.FuncFormatter(lambda x, pos: '{:,.1f}'.format(
+        x / 1000) + 'K' if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000))
+    ax1.yaxis.set_major_formatter(formatter)
+    ax2.yaxis.set_major_formatter(formatter)
+    ax1.legend(loc='upper left')
+    ax2.legend(loc='upper right')
     return plt
-
 
 def getCommonChart(word_comments):
     plt.clf()
@@ -183,6 +177,12 @@ def getCommonChart(word_comments):
     plt.title("Top 5 most used words")
     return plt
 
+def getBarChart(sentimentDict):
+    plt.clf()
+    plt.subplots(figsize=(12, 6))
+    plt.bar(sentimentDict.keys(), sentimentDict.values(), 0.4)
+    plt.title("Number of Comments by Sentiment as a bar chart")
+    return plt
 
 def retrieveData(current_uid, url):
     from models import Video
@@ -192,26 +192,7 @@ def retrieveData(current_uid, url):
     likes_list = [video.likes for video in videos_with_same_url]
     dislikes_list = [video.dislikes for video in videos_with_same_url]
     views_list = [video.views for video in videos_with_same_url]
-    scores_list = [video.score for video in videos_with_same_url]
     return getStats(dates_list, likes_list, dislikes_list, views_list)
-
-
-def getStats(date, likes, dislike, view):
-    plt.clf()
-    fig, ax1 = plt.subplots(figsize=(12, 6))
-    ax1.bar(date, dislike, width=0.4, label='Dislikes')
-    ax1.bar(date, likes, bottom=dislike, width=0.4, label='Likes')
-    ax2 = ax1.twinx()
-    ax2.plot(date, view, color='y', label='Views')
-    fig.tight_layout()
-    formatter = ticker.FuncFormatter(lambda x, pos: '{:,.1f}'.format(
-        x / 1000) + 'K' if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000))
-    ax1.yaxis.set_major_formatter(formatter)
-    ax2.yaxis.set_major_formatter(formatter)
-    ax1.legend(loc='upper left')
-    ax2.legend(loc='upper right')
-    return plt
-
 
 def getAllChart(word_comments, sentimentDict, uid, url):
     import os
@@ -223,9 +204,6 @@ def getAllChart(word_comments, sentimentDict, uid, url):
     pie_chart.savefig(os.path.join("static", "images",
                       "pie_chart.png"))  # Save the pie chart
     
-    bar_chart = getBarChart(sentimentDict)  # Generate bar chart
-    bar_chart.savefig(os.path.join("static", "images",
-                      "bar_chart.png"))  # Save the bar chart
 
     common_chart = getCommonChart(word_comments)  # Generate common chart
     common_chart.savefig(os.path.join("static", "images", "common_chart.png")) # Save the common chart
