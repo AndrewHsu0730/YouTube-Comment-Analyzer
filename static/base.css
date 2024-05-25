@@ -96,7 +96,7 @@ ul li:not(:nth-last-child(-n+4))::after{
 
 a, a:link, a:visited{
   text-decoration: none;
-  color: white;
+  color: white !important;
 }
 
 .moon-logo {
