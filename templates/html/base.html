@@ -20,27 +20,27 @@
             <li><a class = "nav-item" href="{{ url_for("html.home") }}">Terms of Use</a></li>
             <li id="right-item"><a class = "login-button" href="http://localhost:8008/logout">Logout</a></li> 
             <button onclick="toggleDarkMode()" class = "dark-mode-button">
-          <img src="/static/images/moon.png" alt = "Dark Mode" class = "moon-logo">
-          </button> 
-          <script>
-            function toggleDarkMode() {
+              <img src="/static/images/moon.png" alt = "Dark Mode" class = "moon-logo">
+            </button> 
+            <script>
+              function toggleDarkMode() {
 
-              let element = document.querySelector('.container');
-              element.classList.toggle("dark-mode");
+                let element = document.querySelector('.container');
+                element.classList.toggle("dark-mode");
 
-              if (element.classList.contains("dark-mode")) {
-                localStorage.setItem("darkMode", "enabled");
-              } else {
-                localStorage.setItem("darkMode", "disabled");
+                if (element.classList.contains("dark-mode")) {
+                  localStorage.setItem("darkMode", "enabled");
+                } else {
+                  localStorage.setItem("darkMode", "disabled");
+                }
               }
-            }
 
-            document.addEventListener("DOMContentLoaded", function() {
-              if (localStorage.getItem("darkMode") === "enabled") {
-                document.querySelector('.container').classList.add("dark-mode");
-              }
-            });
-          </script>
+              document.addEventListener("DOMContentLoaded", function() {
+                if (localStorage.getItem("darkMode") === "enabled") {
+                  document.querySelector('.container').classList.add("dark-mode");
+                }
+              });
+            </script>
           </ul>
          
         </nav>

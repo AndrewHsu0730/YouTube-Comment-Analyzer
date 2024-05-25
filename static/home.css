@@ -94,12 +94,20 @@
   color: rgb(255, 255, 255);
 }
 
+.home-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 1rem #f44e3f);
+}
+
 .content {
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
   align-items: center;
   justify-content: center;
+  background-color: #f8f8f8;
+  width: 75%;
 }
 
 .fire-image{

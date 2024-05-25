@@ -3,24 +3,26 @@
     <link rel="stylesheet" href = "{{ url_for('static', filename='home.css') }}">
 </head>
 <body>
-    <div class="content">
-        <img src="/static/images/sample.png" alt="Hero image" class="hero-image" />
+    <div class="home-container">
+        <div class="content">
+            <img src="/static/images/sample.png" alt="Hero image" class="hero-image" />
 
-        <form action="http://localhost:8008/views/dashboard" , method="post">
-            <div class="input-container">
-                <div class="input-group">
-                    <label for="video-url" class="input-url">Video URL</label>
-                    <input type="text" id="video-url" name="url" class="input-field-url" placeholder="https://www.youtube.com/watch?v=jNQXAC9IVRw" aria-label="Enter video URL" required/>
+            <form action="http://localhost:8008/views/dashboard" , method="post">
+                <div class="input-container">
+                    <div class="input-group">
+                        <label for="video-url" class="input-url">Video URL</label>
+                        <input type="text" id="video-url" name="url" class="input-field-url" placeholder="https://www.youtube.com/watch?v=jNQXAC9IVRw" aria-label="Enter video URL" required/>
+                    </div>
+                    <div class="input-group">
+                        <label for="page-number" class="input-page">Number of Page</label>
+                        <input type="number" id="page-number" class="input-field-page" name = "pages" placeholder="Number of Page (Each page contains 100 comments)" aria-label="Enter number of pages" required/>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="page-number" class="input-page">Number of Page</label>
-                    <input type="number" id="page-number" class="input-field-page" name = "pages" placeholder="Number of Page (Each page contains 100 comments)" aria-label="Enter number of pages" required/>
+                <div class="button">
+                    <button class="generate-button" type="submit">Generate</button>
                 </div>
-            </div>
-            <div class="button">
-                <button class="generate-button" type="submit">Generate</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
     <div class="video-box">
         <div class="video-header">
@@ -28,7 +30,7 @@
             <p>Trending Videos!</p>
         </div>
         <div class="videos">
-            
+
         </div>
     </div>
 </body>
