@@ -1,7 +1,8 @@
 {% extends '/auth/base.html' %} {% block content %}
 <div
-  class="loginBox"
-  style="max-width: 400px; text-align: center">
+  class="container bg-white p-4 rounded shadow"
+  style="max-width: 400px; text-align: center"
+>
   </h1>
   <form method="post" action="/auth/login">
     <input
@@ -26,7 +27,7 @@
     </button>
   </form>
   <div class="footer mt-4">
-    <p class="signUp">
+    <p class="mb-0">
       Don't have an account?
       <a href="/auth/register">Sign Up</a>
     </p>
