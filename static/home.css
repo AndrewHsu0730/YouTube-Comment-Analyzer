@@ -20,8 +20,9 @@
 .input-url,
 .input-page {
   font-family: Inter, sans-serif;
-  color: #ffffff;
+  color: #090809;
   text-align: center;
+  font-size: 18px;
 }
 
 .input-field-url,
@@ -59,8 +60,8 @@
 .generate-button {
   font-family: Inter, sans-serif;
   color: #fff;
-  font-size: 16px;
-  background-color: #f46262;
+  font-size: 18px;
+  background-color: #f44e3f;
   border-radius: 15px;
   padding: 16px 32px;
   width: 500px;
@@ -96,7 +97,23 @@
 .content {
   display: flex;
   flex-direction: column;
-  background-color: #1a1a1a;
+  background-color: #ffffff;
   align-items: center;
   justify-content: center;
 }
+
+.fire-image{
+  width: 100px;
+  height: 100px;
+}
+
+.video-box {
+  background-color: #f4998D;
+}
+
+.video-header {
+  display: flex;
+  font-family: Inter, sans-serif;
+  font-size: 40px;
+}
+
