@@ -165,9 +165,10 @@ def getPieChart(sentimentDict):
         text.set_weight('bold')
     return plt
 
+
 def getStats(date, likes, dislikes, views):
     plt.clf()
-    fig, ax1 = plt.subplots(figsize=(5, 5))
+    fig, ax1 = plt.subplots(figsize=(12, 6))  # Increase figure size for better spacing
 
     # Plot dislikes bar in red
     bars_dislikes = ax1.bar(date, dislikes, width=0.4, label='Dislikes', color='red')
@@ -182,23 +183,28 @@ def getStats(date, likes, dislikes, views):
     # Improve layout
     fig.tight_layout()
     
+    # Rotate x-axis labels to prevent overlap
+    plt.xticks(rotation=45, ha='right')
+    
     # Annotate the bars with the actual numbers
-    for bar_likes, bar_dislikes in zip(bars_likes, bars_dislikes):
-        # Likes
-        height_likes = bar_likes.get_height() + bar_likes.get_y()
-        ax1.annotate(f'{int(bar_likes.get_height())}',
-                     xy=(bar_likes.get_x() + bar_likes.get_width() / 2, height_likes - bar_likes.get_height() / 2),
-                     xytext=(0, 3), textcoords="offset points", ha='center', va='top', color='white', weight='bold')
-        
-        # Dislikes
-        height_dislikes = bar_dislikes.get_height()
-        ax1.annotate(f'{int(bar_dislikes.get_height())}',
-                     xy=(bar_dislikes.get_x() + bar_dislikes.get_width() / 2, height_dislikes / 2),
-                     xytext=(0, 3), textcoords="offset points", ha='center', va='center', color='white', weight='bold')
+    for i, (bar_likes, bar_dislikes) in enumerate(zip(bars_likes, bars_dislikes)):
+        if i % 5 == 0:  # Reduce label density by only annotating every 5th label
+            # Likes
+            height_likes = bar_likes.get_height() + bar_likes.get_y()
+            ax1.annotate(f'{int(bar_likes.get_height())}',
+                         xy=(bar_likes.get_x() + bar_likes.get_width() / 2, height_likes - bar_likes.get_height() / 2),
+                         xytext=(0, 3), textcoords="offset points", ha='center', va='top', color='black', weight='bold')
+            
+            # Dislikes
+            height_dislikes = bar_dislikes.get_height()
+            ax1.annotate(f'{int(bar_dislikes.get_height())}',
+                         xy=(bar_dislikes.get_x() + bar_dislikes.get_width() / 2, height_dislikes / 2),
+                         xytext=(0, 3), textcoords="offset points", ha='center', va='top', color='black', weight='bold')
     
     # Annotate the views on the line plot
     for i, (x, y) in enumerate(zip(date, views)):
-        ax2.annotate(f'{y:,}', xy=(x, y), xytext=(0, 10), textcoords='offset points', ha='center', va='bottom', color='blue', weight='bold')
+        if i % 3 == 0:  # Reduce label density by only annotating every 5th label
+            ax2.annotate(f'{y:,}', xy=(x, y), xytext=(0, 10), textcoords='offset points', ha='center', va='bottom', color='blue', weight='bold')
 
     # Define custom formatter for y-axis to format numbers
     number_formatter = ticker.FuncFormatter(lambda x, pos: '{:,.1f}K'.format(x / 1000) if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000))
@@ -229,6 +235,8 @@ def getBarChart(sentimentDict):
     return plt
 
 def retrieveData(current_uid, url):
+    import os
+
     from models import Video
     videos_with_same_url = Video.query.filter_by(
         url=url, user_id=current_uid).all()
@@ -236,7 +244,7 @@ def retrieveData(current_uid, url):
     likes_list = [video.likes for video in videos_with_same_url]
     dislikes_list = [video.dislikes for video in videos_with_same_url]
     views_list = [video.views for video in videos_with_same_url]
-    return getStats(dates_list, likes_list, dislikes_list, views_list)
+    return getStats(dates_list, likes_list, dislikes_list, views_list).savefig(os.path.join("static", "images", "stats.png"))
 
 def getAllChart(word_comments, sentimentDict, uid, url):
     import os
@@ -248,9 +256,6 @@ def getAllChart(word_comments, sentimentDict, uid, url):
     pie_chart.savefig(os.path.join("static", "images",
                       "pie_chart.png"))  # Save the pie chart
     
-
     common_chart = getCommonChart(word_comments)  # Generate common chart
     common_chart.savefig(os.path.join("static", "images", "common_chart.png")) # Save the common chart
     
-    stats = retrieveData(uid, url)
-    stats.savefig(os.path.join("static", "images", "stats.png"))
