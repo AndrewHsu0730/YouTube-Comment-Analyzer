@@ -106,3 +106,26 @@ a:visited {
   text-decoration: none;
   color: black;
 }
+
+.moon-logo {
+    height: 40px;
+    width: 40px;
+    color: rgb(45, 45, 48);
+}
+
+.dark-mode-button {
+    border-radius: 20px;
+}
+
+.dark-mode {
+    background-color: #2d2d30;
+}
+
+.dark-mode .logo-text a{
+    color: white;
+}
+
+.dark-mode .nav-menu .nav-item
+{
+    color: white;
+}
