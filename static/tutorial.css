@@ -1,11 +1,11 @@
 .title {
-    font-family: Inter, sans-serif;
+    font: 700 64px Inter, sans-serif;
     text-align: center;
-    margin-top: 5%
+    margin-top: 5%;
 }
 
 .tutorial-container {
-    margin-top: 5%
+    margin-top: 5%;
 }
 
 .steps-wrapper {
@@ -58,7 +58,8 @@
     object-fit: auto;
     object-position: center;
     width: 100%;
-    border: 5px solid #555;
+    border-color: black;
+    border-radius: 15px;
 }
 
 .step-text {
