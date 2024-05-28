@@ -1,5 +1,6 @@
 .title {
     font-family: Inter, sans-serif;
+    text-align: center;
 }
 .steps-wrapper {
     gap: 20px;
