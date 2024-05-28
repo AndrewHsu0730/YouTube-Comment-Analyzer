@@ -1,3 +1,6 @@
+.title {
+    font-family: Inter, sans-serif;
+}
 .steps-wrapper {
     gap: 20px;
     display: flex;
