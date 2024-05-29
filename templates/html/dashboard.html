@@ -3,18 +3,23 @@
     <link rel="stylesheet" href = "{{ url_for('static', filename='dashboard.css') }}">
 </head>
 <main>
-    <h1 class="dashboard-header">Dashboard</h1>
+    <h1 class="dashboard-header">{{ title }}</h1>
+      <img src="{{ thumbnail }}" alt="Video Thumbnail" class="img-thumbnail">
     <div class="dashboard-flex">
       <div class="word-cloud-column">
         <section class="word-cloud-wrapper">
           <h2 class="word-cloud-title">WordCloud</h2>
-          <img loading="lazy" src="{% if not error %}{{ url_for('static', filename='images/word_cloud.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="img-2" alt="WordCloud Visualization" />
+          <a href="{{ url_for('static', filename='images/word_cloud.png') }}" class="lightbox">
+            <img loading="lazy" src="{% if not error %}{{ url_for('static', filename='images/word_cloud.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="img-2" alt="WordCloud Visualization" />
+          </a>
         </section>
       </div>
       <div class="top-words-column">
         <section class="top-words-wrapper">
           <h2 class="top-words-title">Top 5 Used Words</h2>
-          <img loading="lazy" src="{% if not error %}{{ url_for('static', filename='images/common_chart.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="img-3" alt="Top 5 Used Words Visualization" />
+          <a href="{% if not error %}{{ url_for('static', filename='images/common_chart.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="lightbox">
+            <img loading="lazy" src="{% if not error %}{{ url_for('static', filename='images/common_chart.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="img-3" alt="Top 5 Used Words Visualization" />
+          </a>
         </section>
       </div>
     </div>
@@ -23,23 +28,69 @@
         <div class="sentiment-column">
           <section class="sentiment-wrapper">
             <h2 class="sentiment-title">Pie Chart of Sentiments</h2>
-            <img loading="lazy" src="{% if not error %}{{ url_for('static', filename='images/pie_chart.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="img-4" alt="Pie Chart of Sentiments Visualization" />
+            <a href="{{ url_for('static', filename='images/pie_chart.png') }}" class="lightbox">
+              <img loading="lazy" src="{% if not error %}{{ url_for('static', filename='images/pie_chart.png') }}{% else %}{{ url_for('static', filename='images/error.png') }}{% endif %}" class="img-4" alt="Pie Chart of Sentiments Visualization" />
+            </a>
           </section>
         </div>
         <div class="statistic-column">
           <section class="statistic-wrapper">
             <h2 class="statistic-title">Statistic Chart</h2>
-            <img loading="lazy" src="{{ url_for('static', filename='images/stats.png') }}" class="img-5" alt="Statistic Chart Visualization" />
+            <a href="{{ url_for('static', filename='images/stats.png') }}" class="lightbox">
+              <img loading="lazy" src="{{ url_for('static', filename='images/stats.png') }}" class="img-5" alt="Statistic Chart Visualization" />
+            </a>
           </section>
         </div>
       </div>
     </div>
+    <h3 class = "history">User History</h3>
+    <ul class="video-history">
+      {% set displayed_videos = {} %}
+      {% for video in user.videos %}
+          {% if video.url not in displayed_videos %}
+              <li class="video-entry">
+                <div class="video-info">
+                  <strong>Title:</strong> {{ video.title }}<br>
+                  <strong>URL:</strong> <a href="{{ video.url }}">{{ video.url }}</a><br>
+                  <div>
+                      <strong>Views:</strong> {{ video.views }}<br>
+                      <strong>Likes:</strong> {{ video.likes }}<br>
+                      <strong>Dislikes:</strong> {{ video.dislikes }}<br>
+                      <strong>Score:</strong> {{ video.score }}<br>
+                      <strong>Most Occurred Word:</strong> {{ video.word }}<br>
+                      <strong>Date:</strong> {{ video.date }}<br>
+                  </div>
+                </div>
+                <hr class="separator">
+              </li>
+              {% set displayed_videos = displayed_videos.update({video.url: True}) %}
+          {% endif %}
+      {% endfor %}
+    </ul>
   </main>
+
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-              if (localStorage.getItem("darkMode") === "enabled") {
-                document.querySelector('body').classList.add("dark-mode");
-              }
+        const lightboxLinks = document.querySelectorAll('.lightbox');
+        const lightboxOverlay = document.createElement('div');
+        lightboxOverlay.classList.add('lightbox-overlay');
+    
+        const lightboxImage = document.createElement('img');
+        lightboxOverlay.appendChild(lightboxImage);
+    
+        document.body.appendChild(lightboxOverlay);
+    
+        lightboxLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                lightboxImage.src = link.href;
+                lightboxOverlay.classList.add('visible');
             });
-  </script>
+        });
+    
+        lightboxOverlay.addEventListener('click', function() {
+            lightboxOverlay.classList.remove('visible');
+        });
+    });
+    </script>
   {% endblock %}

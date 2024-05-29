@@ -1,3 +1,13 @@
+.title {
+    font: 700 64px Inter, sans-serif;
+    text-align: center;
+    margin-top: 5%;
+}
+
+.tutorial-container {
+    margin-top: 5%;
+}
+
 .steps-wrapper {
     gap: 20px;
     display: flex;
@@ -33,7 +43,7 @@
     flex-direction: column;
     font-size: 20px;
     color: #1e1e1e;
-    font-weight: 500;
+    font-weight: bold;
     line-height: 30px;
 }
 
@@ -48,6 +58,8 @@
     object-fit: auto;
     object-position: center;
     width: 100%;
+    border-color: black;
+    border-radius: 15px;
 }
 
 .step-text {
