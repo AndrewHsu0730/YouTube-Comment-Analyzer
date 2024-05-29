@@ -2,7 +2,6 @@ html,
 body {
     margin: 0;
     height: 100%;
-    background-color: #f4796b;
 }
 
 .header {
@@ -51,18 +50,17 @@ body {
     width: 100%;
 }
 
-
-ul {
+.nav-bar {
     list-style:none;
 }
 
-ul li{
+.nav-bar li{
     display:inline-block; 
     padding:0 20px; 
     position:relative;
 }
 
-ul li:not(:nth-last-child(-n+4))::after{
+.nav-bar li:not(:nth-last-child(-n+3))::after{
     content:""; 
     border:1px solid #5e5e5e;
     border-width: 1.2px 1px 0 0;
@@ -89,12 +87,13 @@ ul li:not(:nth-last-child(-n+4))::after{
     text-decoration: none;
     color: white;
 }
+
 .login-button:visited {
     text-decoration: none;
     color: white;
 }
 
-a, a:link, a:visited{
+.nav-item, .nav-item:link, .nav-item:visited{
   text-decoration: none;
   color: white !important;
 }
@@ -108,5 +107,36 @@ a, a:link, a:visited{
 .dark-mode-button {
     border-radius: 20px;
     margin-top: -14px;
+}
+
+.dark-mode,
+.dark-mode body{
+    background-color: #2d2d30;
+}
+
+.dark-mode .logo-text a,
+.dark-mode .nav-item,
+.dark-mode .login-button {
+    color: white;
+}
+
+.dark-mode .input-label,
+.dark-mode .input-field {
+    color: white;
+    background-color: #444;
+}
+
+.dark-mode .input-url,
+.dark-mode .input-page {
+    color: white;
+}
+
+.dark-mode .content {
+    background-color: #2d2d30;
+}
+
+.dark-mode .generate-button {
+    background-color: #333;
+    color: white;
 }
 

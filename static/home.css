@@ -68,6 +68,10 @@
   justify-content: center;
 }
 
+.generate-button:hover {
+  background-color: #2d2d30;
+}
+
 @media (max-width: 991px) {
   .generate-button {
       white-space: initial;
@@ -98,7 +102,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 0 1rem #f44e3f);
 }
 
 .content {
@@ -106,7 +109,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #f8f8f8;
   width: 75%;
 }
 
@@ -125,3 +127,10 @@
   font-size: 40px;
 }
 
+.dark-mode .input-label {
+  color: white;
+}
+
+.dark-mode .generate-button:hover {
+  background-color: #ff4c4c; 
+}
