@@ -19,16 +19,6 @@ def tutorial():
 def about():
     return render_template("/html/about.html")
 
-@html_routes_bp.route("/contact")
-@login_required
-def contact():
-    return render_template("/html/contact.html")
-
-@html_routes_bp.route("/privacy")
-@login_required
-def privacy():
-    return render_template("/html/privacy.html")
-
 @html_routes_bp.route("/terms")
 @login_required
 def terms():
