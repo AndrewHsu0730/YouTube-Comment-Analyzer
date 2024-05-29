@@ -5,41 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}InsightForge{% endblock %}</title>
     <link rel="stylesheet" href = "{{ url_for('static', filename='base.css') }}">
+    <script>
+      
+      document.addEventListener("DOMContentLoaded", function() {
+        if (localStorage.getItem("darkMode") === "enabled") {
+          document.body.classList.add("dark-mode");
+        }
+      });
+
+      function toggleDarkMode() {
+        let element = document.body;
+        element.classList.toggle("dark-mode");
+
+        if (element.classList.contains("dark-mode")) {
+          localStorage.setItem("darkMode", "enabled");
+        } else {
+          localStorage.setItem("darkMode", "disabled");
+        }
+      }
+    </script>
   </head>
   <body>
     <div class="container">
       <header class="header">
         <div class="logo-container" >
           <img src="/static/images/InsightForge.png" alt="InsightForge logo" class="logo-image" />
-          <h1 class="logo-text" ><a href = "{{ url_for("html.home") }}">InsightForge</h1>
+          <h1 class="logo-text" ><a class = "nav-item" href = "{{ url_for("html.home") }}">InsightForge</h1>
         </div>
         <nav class="nav-menu">
-          <button onclick="toggleDarkMode()" class = "dark-mode-button">
-          <img src="/static/images/moon.png" alt = "Dark Mode" class = "moon-logo">
-          </button> 
-          <script>
-            function toggleDarkMode() {
-
-              let element = document.querySelector('.container');
-              element.classList.toggle("dark-mode");
-
-              if (element.classList.contains("dark-mode")) {
-                localStorage.setItem("darkMode", "enabled");
-              } else {
-                localStorage.setItem("darkMode", "disabled");
-              }
-            }
-
-            document.addEventListener("DOMContentLoaded", function() {
-              if (localStorage.getItem("darkMode") === "enabled") {
-                document.querySelector('.container').classList.add("dark-mode");
-              }
-            });
-          </script>
-          <a class = "nav-item" href="{{ url_for("html.tutorial") }}">Tutorial</a>
-          <a class = "nav-item" href="{{ url_for("html.home")}}">About Us</a>
-          <a class = "nav-item" href="{{ url_for("html.home") }}">Terms of Use</a>
-          <a class = "login-button" href="http://localhost:8008/logout">Logout</a>
+          <ul class = "nav-bar">
+            <li><a class = "nav-item" href="{{ url_for("html.tutorial") }}">Tutorial</a></il>
+            <li><a class = "nav-item" href="{{ url_for("html.about")}}">About Us</a></li>
+            <li><a class = "nav-item" href="{{ url_for("html.terms") }}">Terms of Use</a></li>
+            <li id="right-item"><a class = "login-button" href="http://localhost:8008/logout">Logout</a></li> 
+            <button onclick="toggleDarkMode()" class = "dark-mode-button">
+              <img src="/static/images/moon.png" alt = "Dark Mode" class = "moon-logo">
+            </button> 
+          </ul>
         </nav>
       </header>
       {% block content %} {% endblock %}

@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint, url_for
+from flask import app, render_template, request, Blueprint, url_for
 from flask_login import login_required, current_user
 from analyzer import *
 
@@ -35,23 +35,30 @@ def terms():
     return render_template("/html/terms.html")
 
 @html_routes_bp.route("/dashboard", methods = ["POST"])
+
 def read_url():
     from manage import new_video
-                                
+    user = current_user           
     url = request.form["url"]
     pages = request.form["pages"]
     
     vid = urlToVid(url)
     global title
     title = getTitle(vid)
+    thumbnail = getThumbnail(vid)
     
     like_count, dislike_count, view_count = getStat(vid) #Fetch data from returndislike API
     word_comments,comments = getComment(vid, pages) # Process comments
+    
+
     if  word_comments or comments:
         most_occured_word = max(word_comments, key=word_comments.get) #Get mosr common word in 
         sentimentDict, avg_score = calculateScore(comments)
         new_video(current_user.id,getTitle(vid),url,view_count,like_count,dislike_count,avg_score,most_occured_word)
-        getAllChart(word_comments,sentimentDict,current_user.id,url)
+        retrieveData(current_user.id,url)
+        getAllChart(word_comments,sentimentDict)
     else:
-        return render_template("/html/dashboard.html" ,title = title,error = True)
-    return render_template("/html/dashboard.html" ,title = title)
+        new_video(current_user.id,getTitle(vid),url,view_count,like_count,dislike_count, 0, "Not Avaliable")
+        retrieveData(current_user.id,url)
+        return render_template("/html/dashboard.html" ,title = title,error = True, thumbnail = thumbnail, user=user)
+    return render_template("/html/dashboard.html" ,title = title, thumbnail = thumbnail, user=user)
