@@ -1,4 +1,4 @@
-from flask import url_for, render_template, request, Blueprint, redirect, session
+from flask import url_for, render_template, request, Blueprint, redirect
 from database import db
 from models import User
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -18,12 +18,11 @@ def register():
 def login_post():
     username = request.form.get("username")
     password = request.form.get("password")
-    remember = True if request.form.get("remember") else False
     statement = db.select(User).where(User.username == username)
     user = db.session.execute(statement).scalar()
     if not user or not check_password_hash(user.password, password):
         return redirect(url_for("authorization.home"))
-    login_user(user, remember=remember)
+    login_user(user)
     return redirect(url_for("html.home"))
 
 @auth_routes_bp.route("/logout")
@@ -36,10 +35,11 @@ def logout():
 def signup():
     username = request.form.get("username")
     password = request.form.get("password")
-    print(username, password)
     if not username or not password:
         return redirect(url_for("authorization.register"))
-    if username == "" or password == "":
+    statement = db.select(User).where(User.username == username)
+    user = db.session.execute(statement).scalar()
+    if user:
         return redirect(url_for("authorization.register"))
     new_user = User(username = username, password = generate_password_hash(password, method="scrypt"))
     db.session.add(new_user)

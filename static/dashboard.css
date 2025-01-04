@@ -257,6 +257,7 @@ h1 {
   width: 500px;
   height: 500px;
 }
+
 .video-history {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -282,7 +283,7 @@ h1 {
 }
 
 .dark-mode h1 {
-  color:white;
+  color: white;
 }
 
 .dark-mode h2 {

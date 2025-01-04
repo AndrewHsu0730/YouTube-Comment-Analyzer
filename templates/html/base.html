@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{% block title %}InsightForge{% endblock %}</title>
-    <link rel="stylesheet" href = "{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <script>
       
       document.addEventListener("DOMContentLoaded", function() {
@@ -28,18 +28,16 @@
   <body>
     <div class="container">
       <header class="header">
-        <div class="logo-container" >
-          <img src="/static/images/InsightForge.png" alt="InsightForge logo" class="logo-image" />
-          <h1 class="logo-text" ><a class = "nav-item" href = "{{ url_for("html.home") }}">InsightForge</h1>
+        <div class="logo-container">
+          <img src="/static/images/InsightForge.png" alt="InsightForge logo" class="logo-image"/>
+          <h1 class="logo-text"><a class="nav-item" href="{{ url_for("html.home") }}">InsightForge</h1>
         </div>
         <nav class="nav-menu">
-          <ul class = "nav-bar">
-            <li><a class = "nav-item" href="{{ url_for("html.tutorial") }}">Tutorial</a></il>
-            <li><a class = "nav-item" href="{{ url_for("html.about")}}">About Us</a></li>
-            <li><a class = "nav-item" href="{{ url_for("html.terms") }}">Terms of Use</a></li>
-            <li id="right-item"><a class = "login-button" href="http://localhost:8008/logout">Logout</a></li> 
-            <button onclick="toggleDarkMode()" class = "dark-mode-button">
-              <img src="/static/images/moon.png" alt = "Dark Mode" class = "moon-logo">
+          <ul class="nav-bar">
+            <li><a class="nav-item" href="{{ url_for("html.tutorial") }}">Tutorial</a></li>
+            <li id="right-item"><a class="login-button" href="http://localhost:8008/logout">Logout</a></li> 
+            <button onclick="toggleDarkMode()" class="dark-mode-button">
+              <img src="/static/images/moon.png" alt="Dark Mode" class="moon-logo">
             </button> 
           </ul>
         </nav>
