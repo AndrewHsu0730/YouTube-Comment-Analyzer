@@ -53,15 +53,8 @@ with app.test_client() as test_client:
             db.session.commit()
             response = test_client.post("/auth/login", data={"username": "user3", "password": "user333"}, follow_redirects=True)
             response = test_client.post("/views/dashboard", data={"url": "https://www.youtube.com/watch?v=jNQXAC9IVRw", "pages": 1}, follow_redirects=True)
-            assert b"Dashboard" in response.data
-
-    def test_other_pages():
-        with app.app_context():
-            user = User(username="user4", password=generate_password_hash("user444", method="pbkdf2"))
-            db.session.add(user)
-            db.session.commit()
-            response = test_client.post("/auth/login", data={"username": "user4", "password": "user444"}, follow_redirects=True)
-            response = test_client.get("views/about")
-            assert b'<img\n    src="/static/images/InsightForge.png"\n    alt="Insight Forge logo for YouTube Comment Analyzer"\n  />' in response.data
-            response = test_client.get("/views/terms")
-            assert b"Terms And Conditions" in response.data
+            assert b"WordCloud" in response.data
+            assert b"Top 5 Used Words" in response.data
+            assert b"Pie Chart of Sentiments" in response.data
+            assert b"Statistic Chart" in response.data
+            assert b"User History" in response.data

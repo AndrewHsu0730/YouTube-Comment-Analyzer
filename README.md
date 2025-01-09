@@ -19,24 +19,23 @@ Welcome to the YouTube Comment Analyzer project by InsightForge. Our application
 ## Features
 
 - Analyze YouTube comments for sentiment and provide a score.
-- Translate non-English comments to English for analysis.
-- Filter out URLs, hashtags, numbers, redundant whitespaces, and stop words.
+- Filter out URLs, hashtags, numbers, redundant whitespaces, and stop words in raw comments.
 - User registration, login, and logout functionalities.
 - Store and retrieve past analysis results.
-- Compare statistics between two videos.
+- Compare statistics between two videos or a video analyzed at different times.
+- Show the top most common words in a video.
 
 ## Technology Stack
 
 - **Programming Language**: Python
 - **Web Framework**: Flask
-- **Database**: SQLite
+- **Database**: SQL
 - **Libraries**:
-  - pandas
   - googleapiclient.discovery
-  - googletrans
   - nltk
   - wordcloud
   - matplotlib
+  - re
   - numpy
   - pillow
 
@@ -65,14 +64,15 @@ To run this project locally, follow these steps:
    ```
 
 4. **Run the application**
+
    ```sh
-   flask run
+   python app.py
    ```
 
 ## Usage
 
 1. Before running the app.py file, make sure to run <manage.py> to establish the database on your system.
-2. Open your web browser and navigate to `http://127.0.0.1:5000/`.
+2. Open your web browser and navigate to `http://localhost:8008/`.
 3. Register for an account or log in if you already have one.
 4. Enter the YouTube video URL in the text box and submit.
 5. View the sentiment analysis results on the dashboard.
@@ -90,11 +90,18 @@ YouTube-Comment-Analyzer/
 |
 ├── static/
 |   ├── images/
+|       ├── copy-url.png
+|       ├── error.png
+|       ├── generate-pages.png
 |       ├── InsightForge.png
+|       ├── moon.png
+|       ├── paste-url.png
 |       └── sample.png
+|       ├── select-pages.png
 |   ├── basic.css
+|   ├── dashboard.css
 |   ├── home.css
-|   └── style_about.css/
+|   └── tutorial.css
 |
 ├── templates/
 |   ├── auth/
@@ -102,11 +109,10 @@ YouTube-Comment-Analyzer/
 |       ├── login.html
 |       └── signup.html
 |   └── html/
-|       ├── about.html
 |       ├── base.html
 |       ├── dashboard.html
 │       ├── home.html
-|       └── terms.html
+|       └── tutorial.html
 |
 ├── tests/
 │   ├── functional/
@@ -121,12 +127,10 @@ YouTube-Comment-Analyzer/
 ├── api_key.py
 ├── app.py
 ├── database.py
-├── demo.py
 ├── manage.py
 ├── models.py
 ├── pytest.ini
 ├── README.md
-├── test_models.py
 └── youtube_icon.png
 ```
 
@@ -135,7 +139,7 @@ YouTube-Comment-Analyzer/
 - **Eilish Quan** - [equan9@my.bcit.ca](mailto:equan9@my.bcit.ca)
 - **Ray Chu** - [rchu38@my.bcit.ca](mailto:rchu38@my.bcit.ca)
 - **Hai (Peter) Wu** - [hwu138@my.bcit.ca](mailto:hwu138@my.bcit.ca)
-- **Ngai (Tony) Lam Chou** - [nchou8@my.bcit.ca](mailto:nchou8@my.bcit.ca)
+- **Ngai-Lam (Tony) Chou** - [nchou8@my.bcit.ca](mailto:nchou8@my.bcit.ca)
 - **Ashutosh (Ash) Dhatwalia** - [adhatwalia@my.bcit.ca](mailto:adhatwalia@my.bcit.ca)
 - **Chu-Hsiang (Andrew) Hsu** - [chsu100@my.bcit.ca](mailto:chsu100@my.bcit.ca)
 
