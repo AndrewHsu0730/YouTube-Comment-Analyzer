@@ -1,9 +1,7 @@
-from sqlalchemy import Numeric, ForeignKey, Integer, String, Text, DateTime
+from sqlalchemy import Numeric, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship, mapped_column
 from database import db
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
 
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
@@ -30,16 +28,6 @@ class Video(db.Model):
     user_id = mapped_column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship('User', back_populates='videos')
     comments = relationship('Comment', back_populates='video', lazy=True)
-
-    # def __init__(self, title, url, views, likes, dislikes, word, date, user_id):
-    #     self.title = title
-    #     self.url = url
-    #     self.views = views
-    #     self.likes = likes
-    #     self.dislikes = dislikes
-    #     self.word = word
-    #     self.date = date
-    #     self.user_id = user_id
 
 class Comment(db.Model):
     __tablename__ = "comment"

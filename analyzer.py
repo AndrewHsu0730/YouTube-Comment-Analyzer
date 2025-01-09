@@ -4,11 +4,14 @@ import requests
 import numpy as np
 from PIL import Image
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from googleapiclient.discovery import build
 from api_key import API_KEY
+from models import Video
+from database import db
+from sqlalchemy import select, func
+import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import matplotlib
 matplotlib.use('Agg')
@@ -23,7 +26,8 @@ analyzer = SentimentIntensityAnalyzer()
 
 def getStat(vid):
     request = requests.get(
-        f"https://returnyoutubedislikeapi.com/votes?videoId={vid}").json()
+        f"https://returnyoutubedislikeapi.com/votes?videoId={vid}"
+    ).json()
 
     like_count = request["likes"]
     dislike_count = request["dislikes"]
@@ -39,6 +43,8 @@ def urlToVid(url):
         else:
             vid = url[(url.index("v=") + 2):]
         return vid
+    else:
+        return None
 
 
 def processComment(comment):
@@ -58,6 +64,8 @@ def getTitle(vid):
         part="snippet",
         id=vid,
     ).execute()
+    if response["items"] == []:
+        return None
     title = response["items"][0]["snippet"]["title"]
     return title
 
@@ -101,8 +109,7 @@ def getComment(vid, pages):
                     comments.append(sentence)
                     for word in sentence.split():
                         if word not in stopwords:
-                            word_comments[word.title()] = word_comments.get(
-                                word.title(), 0) + 1
+                            word_comments[word.title()] = word_comments.get(word.title(), 0) + 1
 
             next_page_token = response.get("nextPageToken")
             if not next_page_token:
@@ -122,18 +129,22 @@ def generateWordCloud(comments):
 
     plt.subplots(figsize=(5, 5))
     try:
-        word_cloud = WordCloud(font_path='arial',
-                               scale=3,
-                               collocations=False,
-                               background_color="white",
-                               mask=np.array(Image.open('youtube_icon.png')),
-                               colormap="Reds_r").generate_from_frequencies(comments)
+        word_cloud = WordCloud(
+            font_path='arial',
+            scale=3,
+            collocations=False,
+            background_color="white",
+            mask=np.array(Image.open('youtube_icon.png')),
+            colormap="Reds_r"
+        ).generate_from_frequencies(comments)
     except:
-        word_cloud = WordCloud(scale=3,
-                               collocations=False,
-                               background_color="white",
-                               mask=np.array(Image.open('youtube_icon.png')),
-                               colormap="Reds_r").generate_from_frequencies(comments)
+        word_cloud = WordCloud(
+            scale=3,
+            collocations=False,
+            background_color="white",
+            mask=np.array(Image.open('youtube_icon.png')),
+            colormap="Reds_r"
+        ).generate_from_frequencies(comments)
 
     plt.imshow(word_cloud)
     plt.axis('off')
@@ -146,9 +157,7 @@ def calculateScore(comments):
     for score in scores:
         sum_ += score["compound"]
     avg_score = sum_ / len(scores)
-    print(avg_score)
-    sentiment = list(
-        map(lambda score: identifySentiment(score["compound"]), scores))
+    sentiment = list(map(lambda score: identifySentiment(score["compound"]), scores))
     sentimentDict = {"Postive": sentiment.count("Positive"),
                      "Negative": sentiment.count("Negative"),
                      "Neutral": sentiment.count("Neutral")}
@@ -166,8 +175,7 @@ def identifySentiment(score):
 
 def getPieChart(sentimentDict):
     total_comments = sum(sentimentDict.values())
-    sentiment_percentages = {
-        k: (v / total_comments) * 100 for k, v in sentimentDict.items()}
+    sentiment_percentages = {k: (v / total_comments) * 100 for k, v in sentimentDict.items()}
 
     # Plot the pie chart
     plt.clf()
@@ -207,17 +215,14 @@ def getStats(dates, likes, dislikes, views):
     bar_positions = range(len(dates))
 
     # Plot dislikes bar in red
-    bars_dislikes = ax1.bar(bar_positions, dislikes,
-                            width=0.4, label='Dislikes', color='red')
+    bars_dislikes = ax1.bar(bar_positions, dislikes, width=0.4, label='Dislikes', color='red')
 
     # Plot likes bar in green, stacked on top of dislikes
-    bars_likes = ax1.bar(bar_positions, likes, bottom=dislikes,
-                         width=0.4, label='Likes', color='green')
+    bars_likes = ax1.bar(bar_positions, likes, bottom=dislikes, width=0.4, label='Likes', color='green')
 
     # Plot views on a secondary y-axis
     ax2 = ax1.twinx()
-    line_views, = ax2.plot(bar_positions, views,
-                           label='Views', color='blue', marker='o')
+    line_views, = ax2.plot(bar_positions, views, label='Views', color='blue', marker='o')
 
     # Annotate the bars with the actual numbers only when values change
     last_likes_value = None
@@ -237,8 +242,8 @@ def getStats(dates, likes, dislikes, views):
         if last_dislikes_value is None or bar_dislikes.get_height() != last_dislikes_value:
             height_dislikes = bar_dislikes.get_height()
             ax1.annotate(f'{int(bar_dislikes.get_height())}',
-                         xy=(xpos + bar_dislikes.get_width() /
-                             2, height_dislikes / 2),
+                         xy=(xpos + bar_dislikes.get_width() / 2,
+                             height_dislikes / 2),
                          xytext=(0, 3), textcoords="offset points", ha='center', va='center', color='black', weight='bold')
             last_dislikes_value = bar_dislikes.get_height()
 
@@ -246,18 +251,19 @@ def getStats(dates, likes, dislikes, views):
     last_view_value = None
     for xpos, y in zip(bar_positions, views):
         if last_view_value is None or y != last_view_value:
-            ax2.annotate(f'{y:,}', xy=(xpos, y), xytext=(
-                0, 10), textcoords='offset points', ha='center', va='bottom', color='blue', weight='bold')
+            ax2.annotate(f'{y:,}', xy=(xpos, y), xytext=(0, 10), textcoords='offset points', ha='center', va='bottom', color='blue', weight='bold')
             last_view_value = y
 
     # Define custom formatter for y-axis to format numbers
-    number_formatter = ticker.FuncFormatter(lambda x, pos: '{:,.1f}K'.format(
-        x / 1000) if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000))
+    number_formatter = ticker.FuncFormatter(
+        lambda x, pos: '{:,.1f}K'.format(x / 1000) if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000)
+    )
     ax1.yaxis.set_major_formatter(number_formatter)
 
     # Define custom formatter for secondary y-axis to format views
-    views_formatter = ticker.FuncFormatter(lambda x, pos: '{:,.1f}K'.format(
-        x / 1000) if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000))
+    views_formatter = ticker.FuncFormatter(
+        lambda x, pos: '{:,.1f}K'.format(x / 1000) if x < 1000000 else '{:,.1f}M'.format(x / 1000000) if x < 1000000000 else '{:,.1f}B'.format(x / 1000000000)
+    )
     ax2.yaxis.set_major_formatter(views_formatter)
 
     # Improve layout
@@ -289,9 +295,7 @@ def getCommonChart(word_comments):
 
 
 def retrieveData(current_uid, url):
-    from models import Video
-    videos_with_same_url = Video.query.filter_by(
-        url=url, user_id=current_uid).all()
+    videos_with_same_url = Video.query.filter_by(url=url, user_id=current_uid).all()
     dates_list = [video.date for video in videos_with_same_url]
     likes_list = [video.likes for video in videos_with_same_url]
     dislikes_list = [video.dislikes for video in videos_with_same_url]
@@ -299,16 +303,31 @@ def retrieveData(current_uid, url):
     return getStats(dates_list, likes_list, dislikes_list, views_list)
 
 
-def getAllChart(word_comments, sentimentDict):
-    import os
+def getLatestVideos(current_uid):
+    subquery = (
+        db.select(Video.url, func.max(Video.date).label("latest_date"))
+        .where(Video.user_id == current_uid)
+        .group_by(Video.url)
+        .subquery()
+    )
+    latest_videos = (
+        db.session.execute(
+            db.select(Video)
+            .join(subquery, (Video.url == subquery.c.url) & (Video.date == subquery.c.latest_date))
+            .where(Video.user_id == current_uid)
+        ).scalars()
+    )
 
+    return latest_videos
+
+
+def getAllChart(word_comments, sentimentDict):
     wc = generateWordCloud(word_comments)  
     # Save the word cloud
     wc.savefig(os.path.join("static", "images", "word_cloud.png"))
 
     pie_chart = getPieChart(sentimentDict)  
-    pie_chart.savefig(os.path.join("static", "images",
-                      "pie_chart.png")) 
+    pie_chart.savefig(os.path.join("static", "images", "pie_chart.png")) 
 
     common_chart = getCommonChart(word_comments) 
     common_chart.savefig(os.path.join("static", "images", "common_chart.png"))
